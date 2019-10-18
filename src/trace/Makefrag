@@ -1,0 +1,1 @@
+$(eval $(call OBJTARGET,trace/tracer,trace/tracer.cpp trace/tracer.h utils.h))
