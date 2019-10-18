@@ -1,7 +1,3 @@
-/**
- * @file
- * Define the `Tracer` class.
- */
 #ifndef TRACER_H_
 #define TRACER_H_
 
