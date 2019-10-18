@@ -1,0 +1,1 @@
+$(call TARGET,OBJTARGET,parser/parser,parser/parser.cpp parser/parser.h utils.h)
