@@ -15,3 +15,30 @@ GravelBox would also have various configurations that can be set pre-run to allo
   - `src/config`: code to save/load configuration files
   - `src/test`: test code
 - `doc`: documentation
+
+## Build
+
+Build and test GravelBox in release mode:
+
+```sh
+make
+```
+
+Build and test GravelBox in debug mode:
+
+```sh
+make DEBUG=1
+```
+
+Build only or test only:
+
+```sh
+make build
+make test
+```
+
+Remove all compiled binaries:
+
+```sh
+make clean
+```

@@ -1,19 +1,21 @@
 BINS :=
 OBJS :=
 
-define BINTARGET = 
+define BINTARGET =
 BINS += $(BINDIR)/$(1)
 $(BINDIR)/$(1): $(patsubst %,$(OBJDIR)/%.o,$(2))
 endef
 
-define OBJTARGET = 
+define OBJTARGET =
 OBJS += $(OBJDIR)/$(1).o
 $(OBJDIR)/$(1).o: $(patsubst %,$(SRCDIR)/%,$(2))
 endef
 
-$(eval $(call BINTARGET,gravelbox,main trace/tracer))
+TARGET = $(eval $(call $(1),$(2),$(3)))
 
-$(eval $(call OBJTARGET,main,main.cpp trace/tracer.h))
+$(call TARGET,BINTARGET,gravelbox,main trace/tracer)
+
+$(call TARGET,OBJTARGET,main,main.cpp trace/tracer.h)
 
 include $(SRCDIR)/trace/Makefrag
 
