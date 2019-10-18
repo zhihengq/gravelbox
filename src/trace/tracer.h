@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Define the `Tracer` class.
+ */
 #ifndef TRACER_H_
 #define TRACER_H_
 
@@ -6,9 +10,18 @@
 
 namespace GravelBox {
 
+/**
+ * Tracer class spawns and traces child processes.
+ */
 class Tracer {
  public:
-	void run(const std::vector<std::string> &target) const;
+	/**
+	 * Spawn and trace a child process.
+	 * Return after the child process exits.
+	 *
+	 * @param args the arguments used to spawn processes.
+	 */
+	void run(const std::vector<std::string> &args) const;
 };
 
 }  // namespace GravelBox

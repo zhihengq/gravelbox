@@ -13,11 +13,14 @@ else
 	CXXFLAGS+= -DNDEBUG -O3
 endif
 
-all: build test
+all: build doc test
+
+doc:
+	doxygen Doxyfile
 
 clean:
-	rm -rf $(BINDIR) $(OBJDIR)
+	rm -rf $(BINDIR) $(OBJDIR) doc
 
-.PHONY: all clean
+.PHONY: all doc clean
 
 include $(SRCDIR)/Makefrag
