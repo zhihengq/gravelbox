@@ -19,7 +19,7 @@ void Tracer::run(const std::vector<std::string> &args) const {
 		exit(WEXITSTATUS(wstatus));
 	check(::ptrace(PTRACE_SETOPTIONS, child, nullptr, PTRACE_O_EXITKILL));
 	do {
-		check(::ptrace(PTRACE_CONT, child, nullptr, 0));
+		check(::ptrace(PTRACE_SYSCALL, child, nullptr, 0));
 		check(::waitpid(child, &wstatus, 0));
 	} while (!WIFEXITED(wstatus));
 }

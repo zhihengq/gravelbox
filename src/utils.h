@@ -1,6 +1,7 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#include <cassert>
 #include <cerrno>
 #include <cstdlib>
 #include <unistd.h>
@@ -53,12 +54,15 @@ inline T check(T retval) {
 inline pid_t spawn(
 		const std::vector<std::string> &args,
 		std::function<void()> child_init = {}) {
+	assert(args.size() >= 1);
+
 	// parse args
 	auto argarray = std::make_unique<const char * []>(args.size() + 1);
 	for (size_t i = 0; i < args.size(); i++)
 		argarray[i] = args[i].c_str();
 	argarray[args.size()] = nullptr;
 
+	// fork and exec
 	pid_t pid = check(::fork());
 	if (pid == 0) {
 		if (child_init)
