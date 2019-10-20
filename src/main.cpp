@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
 		tracer.run(args);
 		return 0;
 	} catch (const std::system_error &se) {
-		std::cerr << "Error " << se.code().value() << ": " << se.what() << std::endl;
+		std::cerr << "Error " << se.code().value() << ": " << se.what()
+				  << std::endl;
 		return EXIT_FAILURE;
 	}
 }

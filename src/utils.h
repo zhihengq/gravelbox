@@ -14,7 +14,6 @@
 
 namespace GravelBox {
 
-
 /**
  * Common util functions.
  */
@@ -34,8 +33,7 @@ namespace Utils {
  * @return `retval` if there is no error (`retval` \f$\ge 0\f$).
  * @throw system_error if there is an error (`retval` \f$< 0\f$).
  */
-template <typename T>
-inline T check(T retval) {
+template <typename T> inline T check(T retval) {
 	if (retval < 0)
 		throw_system_error();
 	return retval;
@@ -51,13 +49,12 @@ inline T check(T retval) {
  * @return the child process pid.
  * @throw system_error if `fork()` or `exec` fails.
  */
-inline pid_t spawn(
-		const std::vector<std::string> &args,
-		std::function<void()> child_init = {}) {
+inline pid_t spawn(const std::vector<std::string> &args,
+				   std::function<void()> child_init = {}) {
 	assert(args.size() >= 1);
 
 	// parse args
-	auto argarray = std::make_unique<const char * []>(args.size() + 1);
+	auto argarray = std::make_unique<const char *[]>(args.size() + 1);
 	for (size_t i = 0; i < args.size(); i++)
 		argarray[i] = args[i].c_str();
 	argarray[args.size()] = nullptr;
@@ -67,7 +64,7 @@ inline pid_t spawn(
 	if (pid == 0) {
 		if (child_init)
 			child_init();
-		::execvp(args[0].c_str(), const_cast<char * const *>(argarray.get()));
+		::execvp(args[0].c_str(), const_cast<char *const *>(argarray.get()));
 		throw_system_error();
 	} else {
 		return pid;

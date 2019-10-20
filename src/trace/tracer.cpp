@@ -15,7 +15,7 @@ using Utils::check;
 
 void Tracer::run(const std::vector<std::string> &args) const {
 	pid_t child = Utils::spawn(
-			args, []() {::ptrace(PTRACE_TRACEME, 0, nullptr, nullptr);});
+		args, []() { ::ptrace(PTRACE_TRACEME, 0, nullptr, nullptr); });
 	// wait for child process to be ready for trace
 	int wstatus;
 	check(::waitpid(child, &wstatus, 0));

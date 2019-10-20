@@ -11,7 +11,7 @@ namespace GravelBox {
  * Parser class parses syscall arguments to human readable strings.
  */
 class Parser {
- public:
+  public:
 	/**
 	 * Parse syscall registers to human readable strings.
 	 *

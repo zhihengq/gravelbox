@@ -10,7 +10,7 @@ namespace GravelBox {
  * Tracer class spawns and traces child processes.
  */
 class Tracer {
- public:
+  public:
 	/**
 	 * Spawn and trace a child process.
 	 * Return after the child process exits.
