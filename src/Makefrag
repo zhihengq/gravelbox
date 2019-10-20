@@ -15,7 +15,7 @@ TARGET = $(eval $(call $(1),$(2),$(3)))
 
 $(call TARGET,BINTARGET,gravelbox,main trace/tracer parser/parser)
 
-$(call TARGET,OBJTARGET,main,main.cpp trace/tracer.h)
+$(call TARGET,OBJTARGET,main,main.cpp trace/tracer.h exceptions.h)
 
 include $(SRCDIR)/trace/Makefrag
 include $(SRCDIR)/parser/Makefrag

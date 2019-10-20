@@ -1,3 +1,4 @@
+#include <exceptions.h>
 #include <trace/tracer.h>
 
 #include <iostream>
@@ -18,5 +19,7 @@ int main(int argc, char **argv) {
 		std::cerr << "Error " << se.code().value() << ": " << se.what()
 				  << std::endl;
 		return EXIT_FAILURE;
+	} catch (const GravelBox::ChildExitException &cee) {
+		return cee.exit_code;
 	}
 }

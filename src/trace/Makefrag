@@ -1,1 +1,1 @@
-$(call TARGET,OBJTARGET,trace/tracer,trace/tracer.cpp trace/tracer.h parser/parser.h utils.h)
+$(call TARGET,OBJTARGET,trace/tracer,trace/tracer.cpp trace/tracer.h parser/parser.h utils.h exceptions.h)

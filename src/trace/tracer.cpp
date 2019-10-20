@@ -1,5 +1,6 @@
 #include "tracer.h"
 #include <utils.h>
+#include <exceptions.h>
 #include <parser/parser.h>
 
 #include <cassert>
@@ -21,7 +22,7 @@ void Tracer::run(const std::vector<std::string> &args) const {
 	check(::waitpid(child, &wstatus, 0));
 	if (WIFEXITED(wstatus))
 		// child process fails to start and has printed the error
-		exit(WEXITSTATUS(wstatus));
+		throw ChildExitException{WEXITSTATUS(wstatus)};
 
 	// kill target if GravelBox is killed
 	check(::ptrace(PTRACE_SETOPTIONS, child, nullptr, PTRACE_O_EXITKILL));
