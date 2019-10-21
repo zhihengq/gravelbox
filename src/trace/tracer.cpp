@@ -1,20 +1,21 @@
 #include "tracer.h"
 #include <utils.h>
 #include <exceptions.h>
-#include <parser/parser.h>
 
 #include <cassert>
 #include <sys/wait.h>
 #include <sys/ptrace.h>
 #include <sys/user.h>
 
-#include <iostream>
+#include <functional>
 
 namespace GravelBox {
 
+namespace TracerDetails {
+
 using Utils::check;
 
-void Tracer::run(const std::vector<std::string> &args) const {
+void run_with_callbacks(const std::vector<std::string> &args, const std::function<bool(user_regs_struct)> &callback) {
 	pid_t child = Utils::spawn(
 		args, []() { ::ptrace(PTRACE_TRACEME, 0, nullptr, nullptr); });
 	// wait for child process to be ready for trace
@@ -35,7 +36,7 @@ void Tracer::run(const std::vector<std::string> &args) const {
 		} else {
 			user_regs_struct regs;
 			check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
-			std::cout << Parser{}(regs) << std::endl;
+			callback(regs);
 		}
 		check(::ptrace(PTRACE_SYSCALL, child, nullptr, 0));
 		// syscall entry
@@ -46,4 +47,5 @@ void Tracer::run(const std::vector<std::string> &args) const {
 	}
 }
 
+}  // namespace TracerDetails
 }  // namespace GravelBox
