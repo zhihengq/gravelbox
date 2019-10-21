@@ -1,6 +1,8 @@
 #ifndef TRACER_H_
 #define TRACER_H_
 
+#include <type_traits.h>
+
 #include <sys/user.h>
 
 #include <functional>
@@ -58,6 +60,9 @@ class Tracer {
   private:
 	std::unique_ptr<Parser> parser_;
 	std::unique_ptr<UI> ui_;
+
+	static_assert(IsParser<Parser>::value, "Tracer must take in a Parser");
+	static_assert(IsUI<UI>::value, "Tracer must take in an UI");
 };
 
 }  // namespace GravelBox

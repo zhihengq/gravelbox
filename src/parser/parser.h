@@ -1,6 +1,8 @@
 #ifndef PARSER_H_
 #define PARSER_H_
 
+#include <type_traits.h>
+
 #include <sys/user.h>
 
 #include <string>
@@ -20,6 +22,8 @@ class Parser {
 	 */
 	std::string operator()(const user_regs_struct &regs) const noexcept;
 };
+
+static_assert(IsParser<Parser>::value, "Parser does not fulfill Parser");
 
 }  // namespace GravelBox
 

@@ -1,6 +1,8 @@
 #ifndef DEBUG_UI_H_
 #define DEBUG_UI_H_
 
+#include <type_traits.h>
+
 #include <iostream>
 #include <string>
 
@@ -22,6 +24,8 @@ class DebugUI {
 		return true;
 	}
 };
+
+static_assert(IsUI<DebugUI>::value, "DebugUI does not fulfill UI");
 
 }  // namespace GravelBox
 
