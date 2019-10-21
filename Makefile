@@ -33,7 +33,7 @@ clean:
 
 $(BINDIR)/gravelbox: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_OBJS))
 	$(ENSUREDIR) $(dir $@)
-	$(CXX) $(LDFLAGS) $^ -o $@
+	$(CXX) $(LDFLAGS) -lboost_program_options $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS)
 	$(ENSUREDIR) $(dir $@)
