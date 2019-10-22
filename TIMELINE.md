@@ -13,10 +13,10 @@
    - [ ] `qzh` Network syscalls: `bind`, `listen`, `connect`, `recvfrom`, `sendto`, etc
    - [ ] `qzh` Filesystem syscalls: `link`, `unlink`, `truncate`, etc
 1. ui:
-   - [ ] `lanw3` Display arguments
+   - [x] `lanw3` Display arguments
    - [ ] `lanw3` Let user choose yes/no
    - [ ] `lanw3` Let user change arguments
-   - [ ] `lanw3` Add password protection
+   - [x] `lanw3` Add password protection
    - [ ] `lanw3` Optional: gui interfaces
 1. config file:
    - [ ] `pcgubi98` Define rule/config file format
@@ -37,8 +37,8 @@
 - [x] `qzh` 1.a
 - [x] `qzh` 1.b
 - [ ] `qzh` 2.a
-- [ ] `lanw3` 3.a
-- [ ] `lanw3` 3.d
+- [x] `lanw3` 3.a
+- [x] `lanw3` 3.d
 
 ### Week 5:
 
