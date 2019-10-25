@@ -36,6 +36,11 @@ class DebugParser {
 			<< "0x" << regs.r9 << ')';
 		return oss.str();
 	}
+
+	/**
+	 * no-op.
+	 */
+	void setpid() const noexcept {}
 };
 
 static_assert(IsParser<DebugParser>::value,
