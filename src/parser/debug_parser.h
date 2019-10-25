@@ -4,6 +4,7 @@
 #include <type_traits.h>
 
 #include <sys/user.h>
+#include <sys/types.h>
 
 #include <sstream>
 #include <string>
@@ -40,7 +41,7 @@ class DebugParser {
 	/**
 	 * no-op.
 	 */
-	void setpid() const noexcept {}
+	void setpid(pid_t) const noexcept {}
 };
 
 static_assert(IsParser<DebugParser>::value,
