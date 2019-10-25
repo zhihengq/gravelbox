@@ -15,13 +15,13 @@ class ArgType;
  * This class uses operator<< overload.
  */
 class Arg {
-  public:
-	Arg(const ArgType *type, uint64_t arg) : type_(type), value_(arg) {}
 	friend std::ostream &operator<<(std::ostream &os, const Arg &arg);
+	friend class ArgType;
 
   private:
 	const ArgType *type_;
 	uint64_t value_;
+	Arg(const ArgType *type, uint64_t arg) : type_(type), value_(arg) {}
 };
 
 /**

@@ -11,8 +11,20 @@
 
 namespace GravelBox {
 
+/**
+ * A `SyscallDef` contains a signature of an system call.
+ * A `SyscallDef` is not aware of its corresponding syscall number, so it will
+ * ignore `args.orig_rax` and assumes the arguments are for this syscall.
+ */
 class SyscallDef {
   public:
+	/**
+	 * Write the human readable string of the syscall.
+	 *
+	 * @param os output stream.
+	 * @param args syscall argument registers.
+	 * @return `os`
+	 */
 	std::ostream &write(std::ostream &os,
 						const std::array<uint64_t, 6> &args) const {
 		assert(argtypes_.size() < 6);
