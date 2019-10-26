@@ -1,6 +1,6 @@
 #include <exceptions.h>
 #include <trace/tracer.h>
-#include <parser/debug_parser.h>
+#include <parser/parser.h>
 #include <ui/debug_ui.h>
 
 #include <boost/program_options.hpp>
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 	}
 
 	try {
-		auto parser = std::make_unique<GravelBox::DebugParser>();
+		auto parser = std::make_unique<GravelBox::Parser>("syscalldef.json");
 		auto ui = std::make_unique<GravelBox::DebugUI>();
 		GravelBox::Tracer tracer{std::move(parser), std::move(ui)};
 		// TODO(qzh): pass stdin/stdout/stderr to tracer

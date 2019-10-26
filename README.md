@@ -16,6 +16,11 @@ GravelBox would also have various configurations that can be set pre-run to allo
   - `src/test`: test code
 - `doc`: documentation
 
+## Dependencies
+
+- Boost Program Options
+- JsonCpp
+
 ## Build Commands
 
 Build and test GravelBox in release mode:

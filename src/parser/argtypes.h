@@ -2,7 +2,6 @@
 #define ARGTYPES_H_
 
 #include <cstdint>
-
 #include <ostream>
 
 namespace GravelBox {
