@@ -1,5 +1,6 @@
 #include "argtypes.h"
 
+#include <cstdint>
 #include <ostream>
 
 namespace GravelBox {
@@ -8,12 +9,20 @@ void UnknownType::write(std::ostream &os, uint64_t value) const {
 	os << "[0x" << std::hex << value << "]";
 }
 
-void SIntType::write(std::ostream &os, uint64_t value) const {
+void SInt32Type::write(std::ostream &os, uint64_t value) const {
+	os << std::dec << static_cast<int32_t>(value);
+}
+
+void UInt32Type::write(std::ostream &os, uint64_t value) const {
+	os << std::dec << static_cast<uint32_t>(value);
+}
+
+void SInt64Type::write(std::ostream &os, uint64_t value) const {
 	os << std::dec << static_cast<int64_t>(value);
 }
 
-void UIntType::write(std::ostream &os, uint64_t value) const {
-	os << std::dec << value;
+void UInt64Type::write(std::ostream &os, uint64_t value) const {
+	os << std::dec << static_cast<uint64_t>(value);
 }
 
 void PtrType::write(std::ostream &os, uint64_t value) const {

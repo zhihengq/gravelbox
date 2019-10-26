@@ -46,13 +46,18 @@ class Parser {
 
   private:
 	UnknownType unknown_;
-	SIntType sint_;
-	UIntType uint_;
+	SInt32Type sint32_;
+	UInt32Type uint32_;
+	SInt64Type sint64_;
+	UInt64Type uint64_;
 	PtrType ptr_;
 	const std::unordered_map<std::string, std::reference_wrapper<const ArgType>>
 		argtypes_{{"unknown", unknown_},
-				  {"int", sint_},
-				  {"uint", uint_},
+				  {"flags", uint64_},
+				  {"int32_t", sint32_},
+				  {"uint32_t", uint32_},
+				  {"int64_t", sint64_},
+				  {"uint64_t", uint64_},
 				  {"void*", ptr_}};
 	std::unordered_map<uint64_t, SyscallDef> syscall_map_;
 };
