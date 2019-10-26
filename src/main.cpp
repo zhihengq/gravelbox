@@ -65,6 +65,9 @@ int main(int argc, char **argv) {
 		std::cerr << "System error " << se.code().value() << ": " << se.what()
 				  << std::endl;
 		return EXIT_FAILURE;
+	} catch (const GravelBox::ConfigException &ce) {
+		std::cerr << "Configuration error: " << ce.what() << std::endl;
+		return EXIT_FAILURE;
 	} catch (const GravelBox::ChildExitException &cee) {
 		return cee.exit_code;
 	}

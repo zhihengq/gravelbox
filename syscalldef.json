@@ -1,0 +1,79 @@
+[
+	{
+		"number": 0,
+		"name": "read",
+		"params": [
+			"int32_t",
+			"void*",
+			"uint64_t"
+		]
+	},
+	{
+		"number": 1,
+		"name": "write",
+		"params": [
+			"int32_t",
+			"void*",
+			"uint64_t"
+		]
+	},
+	{
+		"number": 2,
+		"name": "open",
+		"params": [
+			"void*",
+			"flags",
+			"flags"
+		]
+	},
+	{
+		"number": 3,
+		"name": "close",
+		"params": [
+			"int32_t"
+		]
+	},
+	{
+		"number": 9,
+		"name": "mmap",
+		"params": [,
+			"void*",
+			"uint64_t",
+			"flags",
+			"flags",
+			"int32_t",
+			"uint64_t"
+		]
+	},
+	{
+		"number": 10,
+		"name": "mprotect",
+		"params": [
+			"void*",
+			"uint64_t",
+			"flags"
+		]
+	},
+	{
+		"number": 11,
+		"name": "munprotect",
+		"params": [
+			"void*",
+			"uint64_t"
+		]
+	},
+	{
+		"number": 12,
+		"name": "brk",
+		"params": [
+			"void*"
+		]
+	},
+	{
+		"number": 231,
+		"name": "exit_group",
+		"params": [
+			"int32_t"
+		]
+	}
+]
