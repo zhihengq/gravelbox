@@ -6,6 +6,7 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <functional>
 #include <ostream>
 #include <utility>
 #include <vector>
@@ -26,7 +27,7 @@ class SyscallDef {
 	 * @param name the syscall function name.
 	 */
 	template <typename T>
-	SyscallDef(T &&name) : fname_(std::forward(name)) {}
+	SyscallDef(T &&name) : fname_(std::forward<T>(name)) {}
 
 	/**
 	 * Move construct a SyscallDef object.
@@ -52,7 +53,7 @@ class SyscallDef {
 	 */
 	std::ostream &write(std::ostream &os,
 						const std::array<uint64_t, 6> &args) const {
-		assert(argtypes_.size() < 6);
+		assert(argtypes_.size() <= 6);
 		os << fname_ << '(';
 		for (size_t i = 0; i < argtypes_.size(); i++) {
 			if (i > 0)
