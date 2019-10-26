@@ -51,14 +51,14 @@ class ConfigException : std::exception {
 		oss << "Config file \"" << path << "\" is not a valid " << type
 			<< " file";
 		if (!details.empty())
-			oss << " (" << details << ')';
+			oss << std::endl << details;
 		what_ = oss.str();
 	}
 
 	/**
 	 * Return the error message.
 	 *
-	 * @return "Config file {path} is not a valid {type} file[ ({details})]".
+	 * @return "Config file {path} is not a valid {type} file".
 	 */
 	const char *what() const noexcept override { return what_.c_str(); }
 

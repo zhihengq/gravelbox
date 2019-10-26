@@ -31,10 +31,12 @@ Parser::Parser(const std::string &def) {
 			Json::Value params = syscall["params"];
 			sanitize(params.isArray(), "parameter definition is not an array");
 			for (const Json::Value &param : params) {
+				std::string param_str = param.asString();
 				try {
-					syscalldef.add_param(argtypes_.at(param.asString()));
+					syscalldef.add_param(argtypes_.at(param_str));
 				} catch (const std::out_of_range &e) {
-					throw ConfigException(def, "syscall definition", e.what());
+					throw ConfigException(def, "syscall definition",
+										  "unknown type \"" + param_str + '\"');
 				}
 			}
 			syscall_map_.emplace(number, std::move(syscalldef));
