@@ -1,5 +1,5 @@
 CXX = g++
-SOURCES = pwd.cpp main.cpp
+SOURCES = pwd.cpp main.cpp ui.cpp
 
 all: main
 

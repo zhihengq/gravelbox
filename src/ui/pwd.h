@@ -12,32 +12,10 @@ namespace GravelBox {
 class Pwd {
   public:
  	/**
-	 * Deault username = "admin", pwd = "admin",
+	 * Creates a password with input from stdin
 	 * locked = false (screen is unlocked).
 	 */
-	Pwd() = default; 
-
-	/**
-	 * Creates a new user-name-pwd combination.
-	 * Deault username = admin, pwd = admin, screen is unlocked.
-	 * 
-	 * @param username  name of user
-	 * @param pwd	    password to lock/unlock the screen
-	 */
-	Pwd(const std::string &username, const std::string &pwd)
-		: username_(username), pwd_(pwd), locked_(false) {}
-
-	/**
-	 * Changes the current pwd if the given username and old password
-	 * are correct. When locked, user cannot change password.
-	 * 
-	 * @param username  name of user
-	 * @param old_pwd   original password
-	 * @param new_pwd   new password
-	 * @return true     if successfully changed pwd
-	 */
-	bool change_pwd(const std::string &username, const std::string &old_pwd, 
-		const std::string &new_pwd);
+	Pwd(); 
 
 	/**
 	 * Lock the screen.
@@ -47,21 +25,14 @@ class Pwd {
 	bool lock();
 
 	/**
-	 * Unlock the screen if the given password is correct.
+	 * Unlock the screen if the user inputs the correct password.
 	 * 
-	 * @param pwd   password to unlock the screen
 	 * @return true     if successfully unlocked
 	 */
-	bool unlock(const std::string &pwd);
+	bool unlock();
 
-	/**
-	 * Return the locking status
-	 * 
-	 * @return true     if the screen is locked
-	 */
-	bool is_locked() {return locked_;};
   private:
-	std::string username_ = "admin", pwd_ = "admin";
+	std::string pwd_ = "admin";
 	bool locked_ = false;
 };
 	
