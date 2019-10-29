@@ -1,6 +1,7 @@
 #include <exceptions.h>
 #include <trace/tracer.h>
 #include <parser/debug_parser.h>
+#include <logger/logger.h>
 #include <ui/debug_ui.h>
 
 #include <boost/program_options.hpp>
@@ -57,7 +58,8 @@ int main(int argc, char **argv) {
 	try {
 		auto parser = std::make_unique<GravelBox::DebugParser>();
 		auto ui = std::make_unique<GravelBox::DebugUI>();
-		GravelBox::Tracer tracer{std::move(parser), std::move(ui)};
+		auto logger = std::make_unique<GravelBox::Logger>();
+		GravelBox::Tracer tracer{std::move(parser), std::move(ui), std::move(logger)};
 		// TODO(qzh): pass stdin/stdout/stderr to tracer
 		tracer.run(vm.at("args").as<std::vector<std::string>>());
 		return EXIT_SUCCESS;

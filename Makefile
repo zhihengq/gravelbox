@@ -7,7 +7,7 @@ CXXFLAGS ?= -Wall -std=c++17 -fpic -I$(SRCDIR)
 LDFLAGS ?= -fpie -L$(BINDIR)
 ENSUREDIR ?= @mkdir -p
 
-GRAVELBOX_OBJS ?= main trace/tracer parser/parser
+GRAVELBOX_OBJS ?= main trace/tracer
 
 HEADERS := $(wildcard src/**/*.h)
 
