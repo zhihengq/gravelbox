@@ -10,8 +10,8 @@
 1. argument parsing:
    - [x] `qzh` Core syscalls: `open`, `access`, `clone`, `fork`/`vfork`, `execve`, `socket`
    - [x] `qzh` More syscalls: `stat`, `lstat`, `brk`
-   - [ ] `qzh` Network syscalls: `bind`, `listen`, `connect`, `recvfrom`, `sendto`, etc
-   - [ ] `qzh` Filesystem syscalls: `link`, `unlink`, `truncate`, etc
+   - [x] `qzh` Network syscalls: `bind`, `listen`, `connect`, `recvfrom`, `sendto`, etc
+   - [x] `qzh` Filesystem syscalls: `link`, `unlink`, `truncate`, etc
 1. ui:
    - [x] `lanw3` Display arguments
    - [ ] `lanw3` Let user choose yes/no
@@ -52,14 +52,14 @@
 
 - [ ] `pcgubi98` 4.a
 - [ ] `pcgubi98` 4.b
-- [ ] `qzh` 2.c
+- [x] `qzh` 2.c
 - [ ] `lanw3` 4.d
 
 ### Week 7 (feature complete)
 
 - [ ] `pcgubi98` `lanw3` 5.b
 - [ ] `pcgubi98` `lanw3` 5.c
-- [ ] `qzh` 2.d
+- [x] `qzh` 2.d
 
 ### Week 8-10
 
