@@ -26,7 +26,7 @@ GravelBox would also have various configurations that can be set pre-run to allo
 Build and test GravelBox in release mode:
 
 ```bash
-# build binaries and doc and test in debug mode
+# build binaries and test in debug mode
 make
 
 # build in release mode

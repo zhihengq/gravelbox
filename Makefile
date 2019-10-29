@@ -17,7 +17,7 @@ else
 	CXXFLAGS+= -g -Og
 endif
 
-all: build doc test
+all: build test
 
 build: $(BINDIR)/gravelbox
 

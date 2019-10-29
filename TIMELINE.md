@@ -8,8 +8,8 @@
    - [ ] `qzh` Cancel syscall
    - [ ] `qzh` Change syscall parameters
 1. argument parsing:
-   - [ ] `qzh` Core syscalls: `open`, `access`, `clone`, `fork`/`vfork`, `execve`, `socket`
-   - [ ] `qzh` More syscalls: `stat`, `lstat`, `brk`
+   - [x] `qzh` Core syscalls: `open`, `access`, `clone`, `fork`/`vfork`, `execve`, `socket`
+   - [x] `qzh` More syscalls: `stat`, `lstat`, `brk`
    - [ ] `qzh` Network syscalls: `bind`, `listen`, `connect`, `recvfrom`, `sendto`, etc
    - [ ] `qzh` Filesystem syscalls: `link`, `unlink`, `truncate`, etc
 1. ui:
@@ -31,37 +31,37 @@
 
 ## Timeline (by Tuesday each week, before meeting)
 
-### Week 4:
+### Week 4
 
 - [x] `qzh` general (build system) setup
 - [x] `qzh` 1.a
 - [x] `qzh` 1.b
-- [ ] `qzh` 2.a
+- [x] `qzh` 2.a
 - [x] `lanw3` 3.a
 - [x] `lanw3` 3.d
 
-### Week 5:
+### Week 5
 
 - [ ] `qzh` 1.c
-- [ ] `qzh` 2.b
+- [x] `qzh` 2.b
 - [ ] `pcgubi98` 5.a
 - [ ] `lanw3` 3.b
 - [ ] `lanw3` 3.c
 
-### Week 6 (Prototype):
+### Week 6 (Prototype)
 
 - [ ] `pcgubi98` 4.a
 - [ ] `pcgubi98` 4.b
 - [ ] `qzh` 2.c
 - [ ] `lanw3` 4.d
 
-### Week 7 (feature complete):
+### Week 7 (feature complete)
 
 - [ ] `pcgubi98` `lanw3` 5.b
 - [ ] `pcgubi98` `lanw3` 5.c
 - [ ] `qzh` 2.d
 
-### Week 8-10:
+### Week 8-10
 
 - [ ] `qzh` 5.d
 - [ ] `*` Refinement
