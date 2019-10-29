@@ -1,11 +1,10 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-#include <cassert>
-#include <cerrno>
-#include <cstdlib>
 #include <unistd.h>
 
+#include <cassert>
+#include <cerrno>
 #include <functional>
 #include <memory>
 #include <string>
@@ -33,7 +32,8 @@ namespace Utils {
  * @return `retval` if there is no error (`retval` \f$\ge 0\f$).
  * @throw system_error if there is an error (`retval` \f$< 0\f$).
  */
-template <typename T> inline T check(T retval) {
+template <typename T>
+inline T check(T retval) {
 	if (retval < 0)
 		throw_system_error();
 	return retval;
@@ -69,6 +69,19 @@ inline pid_t spawn(const std::vector<std::string> &args,
 	} else {
 		return pid;
 	}
+}
+
+/**
+ * Wrap elements into an `std::array<>`
+ *
+ * @tparam T array element type
+ * @tparam N parameter types
+ * @param args array elements
+ * @return std::array<T,sizeof...(args)>
+ */
+template <typename T, typename... N>
+auto make_array(N &&... args) -> std::array<T, sizeof...(args)> {
+	return {std::forward<N>(args)...};
 }
 
 }  // namespace Utils

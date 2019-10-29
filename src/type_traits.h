@@ -5,6 +5,7 @@
 // We can switch to concepts once C++20 is out.
 
 #include <sys/user.h>
+#include <sys/types.h>
 
 #include <string>
 #include <type_traits>
@@ -18,9 +19,13 @@ struct IsParser : std::false_type {};
 template <typename Parser>
 struct IsParser<
 	Parser,
-	std::void_t<std::enable_if_t<std::is_same<
-		decltype(std::declval<Parser>()(std::declval<user_regs_struct>())),
-		std::string>::value>>> : std::true_type {};
+	std::void_t<
+		std::enable_if_t<std::is_same<decltype(std::declval<Parser>()(
+										  std::declval<user_regs_struct>())),
+									  std::string>::value>,
+		std::enable_if_t<std::is_same<decltype(std::declval<Parser>().setpid(
+										  std::declval<pid_t>())),
+									  void>::value>>> : std::true_type {};
 
 template <typename T, typename = void>
 struct IsUI : std::false_type {};

@@ -2,6 +2,7 @@
 #define EXCEPTIONS_H_
 
 #include <exception>
+#include <sstream>
 
 namespace GravelBox {
 
@@ -30,6 +31,39 @@ class ChildExitException : std::exception {
 	 * @return "Target has exited".
 	 */
 	const char *what() const noexcept override { return "Target has exited"; }
+};
+
+/**
+ * Exception when failed to parse a config file.
+ */
+class ConfigException : std::exception {
+  public:
+	/**
+	 * Construct a `ConfigException` object.
+	 *
+	 * @param path the file path of the config file.
+	 * @param type the expected type description of the config file.
+	 * @param details optional detailed error message.
+	 */
+	ConfigException(const std::string &path, const std::string &type,
+					const std::string &details) {
+		std::ostringstream oss;
+		oss << "Config file \"" << path << "\" is not a valid " << type
+			<< " file";
+		if (!details.empty())
+			oss << std::endl << details;
+		what_ = oss.str();
+	}
+
+	/**
+	 * Return the error message.
+	 *
+	 * @return "Config file {path} is not a valid {type} file".
+	 */
+	const char *what() const noexcept override { return what_.c_str(); }
+
+  private:
+	std::string what_;
 };
 
 }  // namespace GravelBox

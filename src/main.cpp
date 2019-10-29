@@ -1,6 +1,6 @@
 #include <exceptions.h>
 #include <trace/tracer.h>
-#include <parser/debug_parser.h>
+#include <parser/parser.h>
 #include <logger/logger.h>
 #include <ui/debug_ui.h>
 
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 	}
 
 	try {
-		auto parser = std::make_unique<GravelBox::DebugParser>();
+		auto parser = std::make_unique<GravelBox::Parser>("syscalldef.json");
 		auto ui = std::make_unique<GravelBox::DebugUI>();
 		auto logger = std::make_unique<GravelBox::Logger>();
 		GravelBox::Tracer tracer{std::move(parser), std::move(ui), std::move(logger)};
@@ -66,6 +66,9 @@ int main(int argc, char **argv) {
 	} catch (const std::system_error &se) {
 		std::cerr << "System error " << se.code().value() << ": " << se.what()
 				  << std::endl;
+		return EXIT_FAILURE;
+	} catch (const GravelBox::ConfigException &ce) {
+		std::cerr << "Configuration error: " << ce.what() << std::endl;
 		return EXIT_FAILURE;
 	} catch (const GravelBox::ChildExitException &cee) {
 		return cee.exit_code;

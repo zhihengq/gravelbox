@@ -7,9 +7,9 @@ CXXFLAGS ?= -Wall -std=c++17 -fpic -I$(SRCDIR)
 LDFLAGS ?= -fpie -L$(BINDIR)
 ENSUREDIR ?= @mkdir -p
 
-GRAVELBOX_OBJS ?= main trace/tracer
+GRAVELBOX_OBJS ?= main trace/tracer parser/parser parser/argtypes
 
-HEADERS := $(wildcard src/**/*.h)
+HEADERS := $(wildcard src/*.h) $(wildcard src/**/*.h)
 
 ifdef RELEASE
 	CXXFLAGS+= -DNDEBUG -O3
@@ -17,7 +17,7 @@ else
 	CXXFLAGS+= -g -Og
 endif
 
-all: build doc test
+all: build test
 
 build: $(BINDIR)/gravelbox
 
@@ -33,7 +33,7 @@ clean:
 
 $(BINDIR)/gravelbox: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_OBJS))
 	$(ENSUREDIR) $(dir $@)
-	$(CXX) $(LDFLAGS) -lboost_program_options $^ -o $@
+	$(CXX) $(LDFLAGS) -lboost_program_options -ljsoncpp $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS)
 	$(ENSUREDIR) $(dir $@)
