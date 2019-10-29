@@ -5,18 +5,19 @@
 1. `ptrace`:
    - [x] `qzh` fork & ptrace & exec
    - [x] `qzh` Intercept parameters and send to parser
-   - [ ] `qzh` Cancel syscall
-   - [ ] `qzh` Change syscall parameters
+   - [x] `qzh` Cancel syscall
+   - [ ] `qzh` Optional: Change syscall parameters
 1. argument parsing:
    - [x] `qzh` Core syscalls: `open`, `access`, `clone`, `fork`/`vfork`, `execve`, `socket`
    - [x] `qzh` More syscalls: `stat`, `lstat`, `brk`
    - [x] `qzh` Network syscalls: `bind`, `listen`, `connect`, `recvfrom`, `sendto`, etc
    - [x] `qzh` Filesystem syscalls: `link`, `unlink`, `truncate`, etc
+   - [ ] `qzh` Parse file descriptors
 1. ui:
    - [x] `lanw3` Display arguments
-   - [ ] `lanw3` Let user choose yes/no
-   - [ ] `lanw3` Let user change arguments
-   - [x] `lanw3` Add password protection
+   - [x] `lanw3` Let user choose yes/no
+   - [ ] `lanw3` Optional: Let user change arguments
+   - [ ] `lanw3` Add password protection
    - [ ] `lanw3` Optional: gui interfaces
 1. config file:
    - [ ] `pcgubi98` Define rule/config file format
@@ -38,14 +39,14 @@
 - [x] `qzh` 1.b
 - [x] `qzh` 2.a
 - [x] `lanw3` 3.a
-- [x] `lanw3` 3.d
+- [ ] `lanw3` 3.d
 
 ### Week 5
 
-- [ ] `qzh` 1.c
+- [x] `qzh` 1.c
 - [x] `qzh` 2.b
 - [ ] `pcgubi98` 5.a
-- [ ] `lanw3` 3.b
+- [x] `lanw3` 3.b
 - [ ] `lanw3` 3.c
 
 ### Week 6 (Prototype)
@@ -53,6 +54,7 @@
 - [ ] `pcgubi98` 4.a
 - [ ] `pcgubi98` 4.b
 - [x] `qzh` 2.c
+- [ ] `qzh` 2.e
 - [ ] `lanw3` 4.d
 
 ### Week 7 (feature complete)

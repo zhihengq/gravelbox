@@ -1,5 +1,7 @@
-#ifndef _UI_H_
-#define _UI_H_
+#ifndef UI_H_
+#define UI_H_
+
+#include <type_traits.h>
 
 #include <string>
 
@@ -11,23 +13,18 @@ namespace GravelBox {
 class UI {
   public:
 	/**
-	 * Display args of a syscall to user.
+	 * Display the syscall on stderr, and return whether the user wants to
+	 * proceed.
 	 *
-	 * @param human readable args of syscall
-	 * @return true if success
+	 * @param syscall the human readable string for the syscall.
+	 * @return true if the user allows the syscall.
+	 * @return false if the user denys the syscall.
 	 */
-	bool display(const std::string &syscall) const;
-	
-	/**
-	 * Ask for user's choice after displaying a system call.
-	 * Return integer indicator to represent the answer.
-	 * 1 for yes, 0 for no, (-1 for modify -- not implemented yet)
-	 *
-	 * @return  integer indicator
-	 */
-	int confirm() const;
+	bool ask(const std::string &syscall) const;
 };
+
+static_assert(IsUI<UI>::value, "UI does not fulfill UI concept");
 
 }  // namespace GravelBox
 
-#endif  // _UI_H_
+#endif  // UI_H_

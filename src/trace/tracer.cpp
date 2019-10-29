@@ -45,16 +45,27 @@ void run_with_callbacks(
 		check(::waitpid(child, &wstatus, 0));
 		if (WIFEXITED(wstatus)) {
 			break;
-		} else {
-			user_regs_struct regs;
-			check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
-			syscall_callback(regs);
 		}
+
+		user_regs_struct regs;
+		check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
+		bool deny = !syscall_callback(regs);
+		if (deny) {
+			regs.orig_rax = -1;
+			check(::ptrace(PTRACE_SETREGS, child, nullptr, &regs));
+		}
+
 		check(::ptrace(PTRACE_SYSCALL, child, nullptr, 0));
 		// syscall exit
 		check(::waitpid(child, &wstatus, 0));
 		if (WIFEXITED(wstatus)) {
 			break;
+		}
+
+		if (deny) {
+			check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
+			regs.rax = -EPERM;
+			check(::ptrace(PTRACE_SETREGS, child, nullptr, &regs));
 		}
 	}
 }
