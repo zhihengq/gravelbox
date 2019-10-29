@@ -2,6 +2,7 @@
 #include <trace/tracer.h>
 #include <parser/parser.h>
 #include <logger/logger.h>
+#include <ui/debug_ui.h>
 #include <ui/ui.h>
 
 #include <boost/program_options.hpp>
@@ -16,7 +17,7 @@ int main(int argc, char **argv) {
 	po::variables_map vm;
 	po::options_description visible_desc{
 		"GravelBox usage:\n"
-		"  " + std::string{argv[0]} + " [options] -- target [args...]\n"
+		"  " + std::string(argv[0]) + " [options] -- target [args...]\n"
 		"Options"
 	};
 	visible_desc.add_options()
@@ -31,7 +32,10 @@ int main(int argc, char **argv) {
 	pod.add("args", -1);
 
 	try {
-		auto parsed = po::command_line_parser{argc, argv}.options(desc).positional(pod).run();
+		auto parsed = po::command_line_parser(argc, argv)
+						  .options(desc)
+						  .positional(pod)
+						  .run();
 		// "--args" is not actually an option
 		for (const auto &opt : parsed.options)
 			if ((opt.position_key == -1) && (opt.string_key == "args"))
@@ -59,7 +63,7 @@ int main(int argc, char **argv) {
 		auto parser = std::make_unique<GravelBox::Parser>("syscalldef.json");
 		auto ui = std::make_unique<GravelBox::UI>();
 		auto logger = std::make_unique<GravelBox::Logger>();
-		GravelBox::Tracer tracer{std::move(parser), std::move(ui), std::move(logger)};
+		GravelBox::Tracer tracer(std::move(parser), std::move(ui), std::move(logger));
 		// TODO(qzh): pass stdin/stdout/stderr to tracer
 		tracer.run(vm.at("args").as<std::vector<std::string>>());
 		return EXIT_SUCCESS;
