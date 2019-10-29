@@ -34,6 +34,39 @@
 		]
 	},
 	{
+		"number": 4,
+		"name": "stat",
+		"params": [
+			"char*",
+			"void*"
+		]
+	},
+	{
+		"number": 5,
+		"name": "fstat",
+		"params": [
+			"int32_t",
+			"void*"
+		]
+	},
+	{
+		"number": 6,
+		"name": "lstat",
+		"params": [
+			"char*",
+			"void*"
+		]
+	},
+	{
+		"number": 7,
+		"name": "poll",
+		"params": [
+			"void*",
+			"uint64_t",
+			"int32_t"
+		]
+	},
+	{
 		"number": 8,
 		"name": "lseek",
 		"params": [
@@ -76,6 +109,299 @@
 		"name": "brk",
 		"params": [
 			"void*"
+		]
+	},
+	{
+		"number": 13,
+		"name": "rt_sigaction",
+		"params": [
+			"flags",
+			"void*",
+			"void*",
+			"uint64_t"
+		]
+	},
+	{
+		"number": 14,
+		"name": "rt_sigprocmask",
+		"params": [
+			"flags",
+			"void*",
+			"void*",
+			"uint64_t"
+		]
+	},
+	{
+		"number": 15,
+		"name": "rt_sigreturn",
+		"params": []
+	},
+	{
+		"number": 21,
+		"name": "access",
+		"params": [
+			"char*",
+			"flags"
+		]
+	},
+	{
+		"number": 41,
+		"name": "socket",
+		"params": [
+			"flags",
+			"flags",
+			"flags"
+		]
+	},
+	{
+		"number": 42,
+		"name": "connect",
+		"params": [
+			"int32_t",
+			"void*",
+			"int32_t"
+		]
+	},
+	{
+		"number": 43,
+		"name": "accept",
+		"params": [
+			"int32_t",
+			"void*",
+			"void*"
+		]
+	},
+	{
+		"number": 44,
+		"name": "sendto",
+		"params": [
+			"int32_t",
+			"char*",
+			"uint64_t",
+			"flags",
+			"void*",
+			"int32_t"
+		]
+	},
+	{
+		"number": 45,
+		"name": "recvfrom",
+		"params": [
+			"int32_t",
+			"char*",
+			"uint64_t",
+			"flags",
+			"void*",
+			"int32_t"
+		]
+	},
+	{
+		"number": 46,
+		"name": "sendmsg",
+		"params": [
+			"int32_t",
+			"void*",
+			"flags"
+		]
+	},
+	{
+		"number": 47,
+		"name": "recvmsg",
+		"params": [
+			"int32_t",
+			"void*",
+			"flags"
+		]
+	},
+	{
+		"number": 48,
+		"name": "shutdown",
+		"params": [
+			"int32_t",
+			"flags"
+		]
+	},
+	{
+		"number": 49,
+		"name": "bind",
+		"params": [
+			"int32_t",
+			"void*",
+			"int32_t"
+		]
+	},
+	{
+		"number": 50,
+		"name": "listen",
+		"params": [
+			"int32_t",
+			"int32_t"
+		]
+	},
+	{
+		"number": 56,
+		"name": "clone",
+		"params": [
+			"flags",
+			"void*",
+			"void*",
+			"void*",
+			"uint64_t"
+		]
+	},
+	{
+		"number": 57,
+		"name": "fork",
+		"params": []
+	},
+	{
+		"number": 58,
+		"name": "vfork",
+		"params": []
+	},
+	{
+		"number": 59,
+		"name": "execve",
+		"params": [
+			"char*",
+			"void*",
+			"void*"
+		]
+	},
+	{
+		"number": 60,
+		"name": "exit",
+		"params": [
+			"int32_t"
+		]
+	},
+	{
+		"number": 76,
+		"name": "truncate",
+		"params": [
+			"char*",
+			"int64_t"
+		]
+	},
+	{
+		"number": 77,
+		"name": "ftruncate",
+		"params": [
+			"int32_t",
+			"int64_t"
+		]
+	},
+	{
+		"number": 82,
+		"name": "rename",
+		"params": [
+			"char*",
+			"char*"
+		]
+	},
+	{
+		"number": 83,
+		"name": "mkdir",
+		"params": [
+			"char*",
+			"flags"
+		]
+	},
+	{
+		"number": 84,
+		"name": "rmdir",
+		"params": [
+			"char*"
+		]
+	},
+	{
+		"number": 85,
+		"name": "creat",
+		"params": [
+			"char*",
+			"flags"
+		]
+	},
+	{
+		"number": 86,
+		"name": "link",
+		"params": [
+			"char*",
+			"char*"
+		]
+	},
+	{
+		"number": 87,
+		"name": "unlink",
+		"params": [
+			"char*"
+		]
+	},
+	{
+		"number": 88,
+		"name": "symlink",
+		"params": [
+			"char*",
+			"char*"
+		]
+	},
+	{
+		"number": 89,
+		"name": "readlink",
+		"params": [
+			"char*",
+			"void*",
+			"int32_t"
+		]
+	},
+	{
+		"number": 90,
+		"name": "chmod",
+		"params": [
+			"char*",
+			"flags"
+		]
+	},
+	{
+		"number": 91,
+		"name": "fchmod",
+		"params": [
+			"int32_t",
+			"flags"
+		]
+	},
+	{
+		"number": 92,
+		"name": "chown",
+		"params": [
+			"char*",
+			"int32_t",
+			"int32_t"
+		]
+	},
+	{
+		"number": 93,
+		"name": "fchown",
+		"params": [
+			"int32_t",
+			"int32_t",
+			"int32_t"
+		]
+	},
+	{
+		"number": 94,
+		"name": "lchown",
+		"params": [
+			"char*",
+			"int32_t",
+			"int32_t"
+		]
+	},
+	{
+		"number": 95,
+		"name": "umask",
+		"params": [
+			"flags"
 		]
 	},
 	{
