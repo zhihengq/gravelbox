@@ -22,8 +22,10 @@ namespace TracerDetails {
  * @param args the arguments used to spawn the child process.
  * @param callback a callback function when an syscall is intercepted.
  */
-void run_with_callbacks(const std::vector<std::string> &args,
-						const std::function<bool(user_regs_struct)> &callback);
+void run_with_callbacks(
+	const std::vector<std::string> &args,
+	const std::function<void(pid_t)> &pid_callback,
+	const std::function<bool(user_regs_struct)> &syscall_callback);
 
 }  // namespace TracerDetails
 
@@ -51,7 +53,8 @@ class Tracer {
 	 */
 	void run(const std::vector<std::string> &args) const {
 		TracerDetails::run_with_callbacks(
-			args, [&parser = *parser_, &ui = *ui_](const auto &regs) -> bool {
+			args, [&parser = *parser_](pid_t child) { parser.setpid(child); },
+			[&parser = *parser_, &ui = *ui_](const auto &regs) -> bool {
 				auto syscall_str = parser(regs);
 				return ui.ask(syscall_str);
 			});

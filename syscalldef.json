@@ -13,7 +13,7 @@
 		"name": "write",
 		"params": [
 			"int32_t",
-			"void*",
+			"char*",
 			"uint64_t"
 		]
 	},
@@ -21,7 +21,7 @@
 		"number": 2,
 		"name": "open",
 		"params": [
-			"void*",
+			"char*",
 			"flags",
 			"flags"
 		]
@@ -34,9 +34,18 @@
 		]
 	},
 	{
+		"number": 8,
+		"name": "lseek",
+		"params": [
+			"int32_t",
+			"int64_t",
+			"flags"
+		]
+	},
+	{
 		"number": 9,
 		"name": "mmap",
-		"params": [,
+		"params": [
 			"void*",
 			"uint64_t",
 			"flags",
@@ -74,6 +83,16 @@
 		"name": "exit_group",
 		"params": [
 			"int32_t"
+		]
+	},
+	{
+		"number": 257,
+		"name": "openat",
+		"params": [
+			"int32_t",
+			"char*",
+			"flags",
+			"flags"
 		]
 	}
 ]

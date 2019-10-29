@@ -16,9 +16,15 @@ namespace TracerDetails {
 
 using Utils::check;
 
-void run_with_callbacks(const std::vector<std::string> &args, const std::function<bool(user_regs_struct)> &callback) {
+void run_with_callbacks(
+	const std::vector<std::string> &args,
+	const std::function<void(pid_t)> &pid_callback,
+	const std::function<bool(user_regs_struct)> &syscall_callback) {
+	// spawn child
 	pid_t child = Utils::spawn(
-		args, []() { ::ptrace(PTRACE_TRACEME, 0, nullptr, nullptr); });
+		args, []() { check(::ptrace(PTRACE_TRACEME, 0, nullptr, nullptr)); });
+	pid_callback(child);
+
 	// wait for child process to be ready for trace
 	int wstatus;
 	check(::waitpid(child, &wstatus, 0));
@@ -26,11 +32,11 @@ void run_with_callbacks(const std::vector<std::string> &args, const std::functio
 		// child process fails to start and has printed the error
 		throw ChildExitException{WEXITSTATUS(wstatus)};
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,11,0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0)
 	// kill target if GravelBox is killed
 	check(::ptrace(PTRACE_SETOPTIONS, child, nullptr, PTRACE_O_EXITKILL));
 #else
-	// TODO(qzh): find a better solution
+		// TODO(qzh): find a better solution
 #warning Linux kernel version < 3.11, PTRACE_I_KILLEXIT is disabled
 #endif
 	while (true) {
@@ -42,10 +48,10 @@ void run_with_callbacks(const std::vector<std::string> &args, const std::functio
 		} else {
 			user_regs_struct regs;
 			check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
-			callback(regs);
+			syscall_callback(regs);
 		}
 		check(::ptrace(PTRACE_SYSCALL, child, nullptr, 0));
-		// syscall entry
+		// syscall exit
 		check(::waitpid(child, &wstatus, 0));
 		if (WIFEXITED(wstatus)) {
 			break;

@@ -42,23 +42,22 @@ class Parser {
 	 *
 	 * @param pid the pid of the target.
 	 */
-	void setpid(pid_t pid) {}
+	void setpid(pid_t pid) { target_ = pid; }
 
   private:
+	pid_t target_;
 	UnknownType unknown_;
 	SInt32Type sint32_;
 	UInt32Type uint32_;
 	SInt64Type sint64_;
 	UInt64Type uint64_;
+	StrType str_;
 	PtrType ptr_;
 	const std::unordered_map<std::string, std::reference_wrapper<const ArgType>>
-		argtypes_{{"unknown", unknown_},
-				  {"flags", uint64_},
-				  {"int32_t", sint32_},
-				  {"uint32_t", uint32_},
-				  {"int64_t", sint64_},
-				  {"uint64_t", uint64_},
-				  {"void*", ptr_}};
+		argtypes_{{"unknown", unknown_}, {"flags", uint64_},
+				  {"int32_t", sint32_},  {"uint32_t", uint32_},
+				  {"int64_t", sint64_},  {"uint64_t", uint64_},
+				  {"char*", str_},       {"void*", ptr_}};
 	std::unordered_map<uint64_t, SyscallDef> syscall_map_;
 };
 

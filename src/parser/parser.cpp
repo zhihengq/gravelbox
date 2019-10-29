@@ -12,7 +12,7 @@
 
 namespace GravelBox {
 
-Parser::Parser(const std::string &def) {
+Parser::Parser(const std::string &def) : str_(target_) {
 	try {
 		std::ifstream config(def, std::ifstream::binary);
 		Json::Value definitions;

@@ -104,6 +104,35 @@ struct PtrType : public ArgType {
 	void write(std::ostream &os, uint64_t value) const override;
 };
 
+/**
+ * ABC of all types that requires memory reading.
+ */
+class MemType : public ArgType {
+  public:
+	/**
+	 * Construct a MemType with target pid.
+	 *
+	 * @param target the target pid.
+	 */
+	explicit MemType(const pid_t &target) : target_(target) {}
+
+  protected:
+	/**
+	 * Target pid.
+	 */
+	const pid_t &target_;
+};
+
+/**
+ * String type.
+ * Print as string, which requires reading target memory.
+ */
+class StrType : public MemType {
+  public:
+	using MemType::MemType;
+	void write(std::ostream &os, uint64_t value) const override;
+};
+
 }  // namespace GravelBox
 
 #endif  // ARGTYPES_H_
