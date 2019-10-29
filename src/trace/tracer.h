@@ -30,18 +30,19 @@ void run_with_callbacks(const std::vector<std::string> &args,
 /**
  * Tracer class spawns and traces child processes.
  */
-template <typename Parser, typename UI>
+template <typename Parser, typename UI, typename Logger>
 class Tracer {
   public:
 	/**
-	 * Construct a Tracer with a parser and a UI.
-	 * The tracer will take ownership of the parser and ui objects.
+	 * Construct a Tracer with a parser, a UI, and a logger.
+	 * The tracer will take ownership of the parser, ui, and logger objects.
 	 *
 	 * @param parser the parser object.
 	 * @param ui the ui object.
+	 * @param logger the logger object
 	 */
-	Tracer(std::unique_ptr<Parser> parser, std::unique_ptr<UI> ui) noexcept
-		: parser_(std::move(parser)), ui_(std::move(ui)) {}
+	Tracer(std::unique_ptr<Parser> parser, std::unique_ptr<UI> ui, std::unique_ptr<Logger> logger) noexcept
+		: parser_(std::move(parser)), ui_(std::move(ui)), logger_(std::move(logger)) {}
 
 	/**
 	 * Spawn and trace a child process.
@@ -53,6 +54,7 @@ class Tracer {
 		TracerDetails::run_with_callbacks(
 			args, [&parser = *parser_, &ui = *ui_](const auto &regs) -> bool {
 				auto syscall_str = parser(regs);
+				logger.write(syscall_str);
 				return ui.ask(syscall_str);
 			});
 	}
@@ -60,6 +62,7 @@ class Tracer {
   private:
 	std::unique_ptr<Parser> parser_;
 	std::unique_ptr<UI> ui_;
+	std::unique_ptr<Logger> logger_;
 
 	static_assert(IsParser<Parser>::value, "Tracer must take in a Parser");
 	static_assert(IsUI<UI>::value, "Tracer must take in an UI");
