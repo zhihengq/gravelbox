@@ -38,15 +38,7 @@ int main(int argc, char** argv) {
 				}
 			}
 		}
-		
+
   	}
-	// test UI
-	/*GravelBox::UI ui;
-	ui.display("argv0, argv1");
-	if (ui.confirm()) {
-		std::cout << "user chosed YES" << std::endl;
-	} else {
-		std::cout << "user chosed NO" << std::endl;	
-	}*/
-	return EXIT_SUCCESS;	
+	return EXIT_SUCCESS;
 }
