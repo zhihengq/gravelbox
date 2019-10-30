@@ -3,7 +3,7 @@
 #include <parser/parser.h>
 #include <logger/logger.h>
 #include <ui/debug_ui.h>
-#include <ui/ui.h>
+#include <ui/cli_ui.h>
 
 #include <boost/program_options.hpp>
 
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 
 	try {
 		auto parser = std::make_unique<GravelBox::Parser>("syscalldef.json");
-		auto ui = std::make_unique<GravelBox::UI>();
+		auto ui = std::make_unique<GravelBox::CliUI>();
 		auto logger = std::make_unique<GravelBox::Logger>();
 		GravelBox::Tracer tracer(std::move(parser), std::move(ui), std::move(logger));
 		// TODO(qzh): pass stdin/stdout/stderr to tracer

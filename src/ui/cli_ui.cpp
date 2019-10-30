@@ -1,11 +1,11 @@
-#include "ui.h"
+#include "cli_ui.h"
 
 #include <iostream>
 #include <string>
 
 namespace GravelBox {
 
-bool UI::ask(const std::string &syscall) const {
+bool CliUI::ask(const std::string &syscall) const {
 	while (true) {
 		std::cerr << syscall << " [Y/n] ";
 		std::string input;

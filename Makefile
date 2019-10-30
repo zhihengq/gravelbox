@@ -7,8 +7,8 @@ CXXFLAGS ?= -Wall -std=c++17 -fpic -I$(SRCDIR)
 LDFLAGS ?= -fpie -L$(BINDIR)
 ENSUREDIR ?= @mkdir -p
 
-GRAVELBOX_OBJS ?= main trace/tracer parser/parser parser/argtypes ui/ui
-UITEST_OBJS ?= ui/test ui/ui ui/pwd
+GRAVELBOX_OBJS ?= main trace/tracer parser/parser parser/argtypes ui/cli_ui
+TEST_CLI_UI_OBJS ?= ui/test ui/cli_ui ui/pwd
 
 HEADERS := $(wildcard src/*.h) $(wildcard src/**/*.h)
 
@@ -20,10 +20,10 @@ endif
 
 all: build
 
-build: $(BINDIR)/gravelbox $(BINDIR)/test_ui
+build: $(BINDIR)/gravelbox $(BINDIR)/test_cli_ui
 
-test: $(BINDIR)/test_ui
-	$(BINDIR)/test_ui
+test: $(BINDIR)/test_cli_ui
+	$(BINDIR)/test_cli_ui
 
 doc:
 	doxygen Doxyfile
@@ -37,7 +37,7 @@ $(BINDIR)/gravelbox: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_OBJS))
 	$(ENSUREDIR) $(dir $@)
 	$(CXX) $(LDFLAGS) -lboost_program_options -ljsoncpp $^ -o $@
 
-$(BINDIR)/test_ui: $(patsubst %,$(OBJDIR)/%.o,$(UITEST_OBJS))
+$(BINDIR)/test_cli_ui: $(patsubst %,$(OBJDIR)/%.o,$(TEST_CLI_UI_OBJS))
 	$(ENSUREDIR) $(dir $@)
 	$(CXX) $(LDFLAGS) $^ -o $@
 

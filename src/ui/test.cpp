@@ -1,16 +1,9 @@
-/**
- * To test pwd.
- */
+#include "pwd.h"
+#include "cli_ui.h"
 
-#include <cstdlib>
-#include <cstdio>
 #include <iostream>
-#include <cstring>
 
-#include "./pwd.h"
-#include "./ui.h"
-
-static void Usage(char* progname) {
+static void Usage(const char* progname) {
 	std::cerr << "Usage: " << progname << std::endl;
 	std::cout << "1. You must set a password at first." << std::endl;
 	std::cout << "2. To lock the console: enter \"LOCK\"" << std::endl;
@@ -22,16 +15,15 @@ int main(int argc, char** argv) {
 	// test Pwd
 	GravelBox::Pwd user;
 	std::string input;
-	while(1) {
+	while (true) {
 		std::cout << "Enter query:" << std::endl;
-    		//std::cin >> input;	cin >> doesn't read the RETURN
-		getline(std::cin, input);
+		std::getline(std::cin, input);
 		if (std::cin.eof()) {
 			std::cout << "Shutting Down..." << std::endl;
 			break;
 		} else if (input.compare("LOCK") == 0) {
 			// only return true for now
-			if(user.lock()) {
+			if (user.lock()) {
 				std::cout << "***SUCCESSFULLY LOCKED***" << std::endl;
 				if (user.unlock()) { // only return true for now
 					std::cout << "***SUCCESSFULLY UNLOCKED***" << std::endl;

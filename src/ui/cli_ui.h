@@ -1,5 +1,5 @@
-#ifndef UI_H_
-#define UI_H_
+#ifndef CLI_UI_H_
+#define CLI_UI_H_
 
 #include <type_traits.h>
 
@@ -10,7 +10,7 @@ namespace GravelBox {
 /**
  * A UI to interact with user
  */
-class UI {
+class CliUI {
   public:
 	/**
 	 * Display the syscall on stderr, and return whether the user wants to
@@ -23,8 +23,8 @@ class UI {
 	bool ask(const std::string &syscall) const;
 };
 
-static_assert(IsUI<UI>::value, "UI does not fulfill UI concept");
+static_assert(IsUI<CliUI>::value, "CliUI does not fulfill UI concept");
 
 }  // namespace GravelBox
 
-#endif  // UI_H_
+#endif  // CLI_UI_H_
