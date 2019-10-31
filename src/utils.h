@@ -19,6 +19,14 @@ namespace GravelBox {
 namespace Utils {
 
 /**
+ * Use a variable to suppress unused variable warning.
+ *
+ * @tparam T any type.
+ */
+template <typename T>
+inline void use(T) {}
+
+/**
  * Throw an `system_error` with the current `errno`.
  */
 [[noreturn]] inline void throw_system_error() {
@@ -28,6 +36,7 @@ namespace Utils {
 /**
  * Check C return values and translate errors to C++ exceptions.
  *
+ * @tparam T return value type.
  * @param retval return value of C API.
  * @return `retval` if there is no error (`retval` \f$\ge 0\f$).
  * @throw system_error if there is an error (`retval` \f$< 0\f$).
@@ -83,6 +92,85 @@ template <typename T, typename... N>
 auto make_array(N &&... args) -> std::array<T, sizeof...(args)> {
 	return {std::forward<N>(args)...};
 }
+
+/**
+ * A file descriptor wrapper with ownership.
+ */
+class Fd {
+  public:
+	/**
+	 * Construct an Fd guard from a raw file descriptor.
+	 * The Fd object will take ownership of the file descriptor.
+	 *
+	 * @param fd the raw file descriptor.
+	 */
+	explicit Fd(int fd) noexcept : fd_(fd) {}
+
+	/**
+	 * Move constructor.
+	 *
+	 * @param fd the Fd object to be moved.
+	 */
+	Fd(Fd &&fd) noexcept : fd_(fd.fd_) { fd.fd_ = -1; }
+
+	/**
+	 * Destroy the Fd object and close the file descriptor.
+	 */
+	~Fd() {
+		if (fd_ >= 0)
+			check(::close(fd_));
+	}
+
+	/**
+	 * Move assignment.
+	 *
+	 * @param fd the Fd object to be moved.
+	 * @return Fd& this
+	 */
+	Fd &operator=(Fd &&fd) noexcept {
+		if (this != std::addressof(fd)) {
+			fd_ = fd.fd_;
+			fd.fd_ = -1;
+		}
+		return *this;
+	}
+
+	/**
+	 * Convert into a raw file descriptor.
+	 *
+	 * @return int
+	 */
+	operator int() const noexcept { return fd_; }
+
+	/**
+	 * Release the ownership of the file descriptor.
+	 *
+	 * @return int the raw file descriptor.
+	 */
+	int release() noexcept {
+		int fd = fd_;
+		fd_ = -1;
+		return fd;
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	Fd() = default;
+
+	/**
+	 * Copy constructor.
+	 */
+	Fd(const Fd &) = delete;
+
+	/**
+	 * Copy assignment.
+	 */
+	Fd &operator=(const Fd &) = delete;
+
+  private:
+	int fd_ = -1;
+};
 
 }  // namespace Utils
 }  // namespace GravelBox

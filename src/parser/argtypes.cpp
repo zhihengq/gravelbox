@@ -45,7 +45,7 @@ void StrType::write(std::ostream &os, uint64_t value) const {
 	iovec remote = {reinterpret_cast<void *>(value), kMaxStrLen};
 	ssize_t bytes
 		= Utils::check(::process_vm_readv(target_, &local, 1, &remote, 1, 0));
-	assert(bytes == kMaxStrLen);
+	assert(bytes == kMaxStrLen); Utils::use(bytes);
 	os << '\"';
 	size_t i;
 	for (i = 0; i < kMaxStrLen; i++) {

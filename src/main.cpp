@@ -2,8 +2,7 @@
 #include <trace/tracer.h>
 #include <parser/parser.h>
 #include <logger/logger.h>
-#include <ui/debug_ui.h>
-#include <ui/cli_ui.h>
+#include <ui/pinentry_ui.h>
 
 #include <boost/program_options.hpp>
 
@@ -61,7 +60,7 @@ int main(int argc, char **argv) {
 
 	try {
 		auto parser = std::make_unique<GravelBox::Parser>("syscalldef.json");
-		auto ui = std::make_unique<GravelBox::CliUI>();
+		auto ui = std::make_unique<GravelBox::PinentryUI>("pinentry-curses");
 		auto logger = std::make_unique<GravelBox::Logger>();
 		GravelBox::Tracer tracer(std::move(parser), std::move(ui), std::move(logger));
 		// TODO(qzh): pass stdin/stdout/stderr to tracer
@@ -70,11 +69,12 @@ int main(int argc, char **argv) {
 	} catch (const std::system_error &se) {
 		std::cerr << "System error " << se.code().value() << ": " << se.what()
 				  << std::endl;
-		return EXIT_FAILURE;
 	} catch (const GravelBox::ConfigException &ce) {
 		std::cerr << "Configuration error: " << ce.what() << std::endl;
-		return EXIT_FAILURE;
+	} catch (const GravelBox::PinentryException &pe) {
+		std::cerr << "Pinentry error: " << pe.what() << std::endl;
 	} catch (const GravelBox::ChildExitException &cee) {
 		return cee.exit_code;
 	}
+	return EXIT_FAILURE;
 }
