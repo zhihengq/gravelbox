@@ -7,16 +7,26 @@ CXXFLAGS ?= -Wall -std=c++17 -fpic -I$(SRCDIR)
 LDFLAGS ?= -fpie -L$(BINDIR)
 ENSUREDIR ?= @mkdir -p
 
+SANITIZERS ?= -fsanitize=address,undefined
+
+ifdef CXXEXTRA
+CXXFLAGS += $(CXXEXTRA)
+endif
+
+ifdef LDEXTRA
+LDFLAGS += $(LDEXTRA)
+endif
+
 GRAVELBOX_OBJS ?= main trace/tracer parser/parser parser/argtypes ui/pinentry_ui
 TEST_CLI_UI_OBJS ?= ui/test ui/cli_ui ui/pwd
 
 HEADERS := $(wildcard src/*.h) $(wildcard src/**/*.h)
 
 ifdef RELEASE
-	CXXFLAGS+= -DNDEBUG -O3
+CXXFLAGS += -DNDEBUG -O3
 else
-	CXXFLAGS+= -g -Og -fsanitize=address,undefined
-	LDFLAGS+= -fsanitize=address,undefined
+CXXFLAGS += -g -Og $(SANITIZERS)
+LDFLAGS += $(SANITIZERS)
 endif
 
 all: build
@@ -36,7 +46,7 @@ clean:
 
 $(BINDIR)/gravelbox: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_OBJS))
 	$(ENSUREDIR) $(dir $@)
-	$(CXX) $(LDFLAGS) -lboost_program_options -lboost_iostreams -ljsoncpp $^ -o $@
+	$(CXX) $(LDFLAGS) $^ -o $@ -lboost_program_options -lboost_iostreams -ljsoncpp
 
 $(BINDIR)/test_cli_ui: $(patsubst %,$(OBJDIR)/%.o,$(TEST_CLI_UI_OBJS))
 	$(ENSUREDIR) $(dir $@)
