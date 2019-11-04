@@ -66,6 +66,29 @@ class ConfigException : std::exception {
 	std::string what_;
 };
 
+/**
+ * Exception from pinentry errors.
+ */
+class PinentryException : std::exception {
+  public:
+	/**
+	 * Construct a PinentryException with error message from pinenetry.
+	 *
+	 * @param msg error message from pinentry.
+	 */
+	PinentryException(const std::string &msg) : what_(msg) {}
+
+	/**
+	 * Return the error message.
+	 *
+	 * @return error message.
+	 */
+	const char *what() const noexcept override { return what_.c_str(); }
+
+  private:
+	std::string what_;
+};
+
 }  // namespace GravelBox
 
 #endif  // EXCEPTION_H_
