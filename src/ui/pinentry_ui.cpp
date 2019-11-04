@@ -22,7 +22,7 @@ PinentryUI::PinentryUI(const std::string &pinentry) {
 	const char *ttyname = ::ttyname(0);
 	if (ttyname == nullptr)
 		Utils::throw_system_error();
-	pid_pinentry_ = Utils::spawn({pinentry, "-T", ttyname}, [&fds]() {
+	pid_pinentry_ = Utils::spawn({pinentry, "--ttyname", ttyname}, [&fds]() {
 		check(::dup2(fds[0], 0));
 		check(::dup2(fds[3], 1));
 		for (int fd : fds)
@@ -30,29 +30,20 @@ PinentryUI::PinentryUI(const std::string &pinentry) {
 	});
 
 	// set up streams
-	odev_pinentry_.open(to_pinentry_w.release(), boost::iostreams::close_handle);
-	idev_pinentry_.open(from_pinentry_r.release(), boost::iostreams::close_handle);
-	check_resp("OK Pleased to meet you");
-
-	// set up pinentry
-	os_pinentry_ << "SETTITLE GravelBox" << std::endl;
-	check_resp();
+	conn_.open(std::move(from_pinentry_r), std::move(to_pinentry_w));
 }
 
 PinentryUI::~PinentryUI() {
-	os_pinentry_ << "BYE" << std::endl;
-	check_resp("OK closing connection");
+	conn_.close();
 	int wstatus;
 	check(::waitpid(pid_pinentry_, &wstatus, 0));
 	assert(WIFEXITED(wstatus));
 }
 
 bool PinentryUI::ask(const std::string &syscall) {
-	os_pinentry_ << "SETDESC " << syscall << std::endl;
-	check_resp();
-	os_pinentry_ << "MESSAGE" << std::endl;
-	check_resp();
-	return true;
+	std::string message
+		= "Do you allow the following system call?%0a" + syscall;
+	return conn_.confirm(message);
 }
 
 }  // namespace GravelBox

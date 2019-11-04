@@ -1,6 +1,7 @@
 #ifndef PINENTRY_UI_H_
 #define PINENTRY_UI_H_
 
+#include "pinentry_conn.h"
 #include <exceptions.h>
 #include <type_traits.h>
 #include <utils.h>
@@ -46,19 +47,7 @@ class PinentryUI {
 
   private:
 	pid_t pid_pinentry_;
-	boost::iostreams::file_descriptor_sink odev_pinentry_;
-	boost::iostreams::file_descriptor_source idev_pinentry_;
-	boost::iostreams::stream<boost::iostreams::file_descriptor_sink>
-		os_pinentry_ = odev_pinentry_;
-	boost::iostreams::stream<boost::iostreams::file_descriptor_source>
-		is_pinentry_ = idev_pinentry_;
-
-	void check_resp(const std::string &expected = "OK") {
-		std::string s;
-		std::getline(is_pinentry_, s);
-		if (s != expected)
-			throw PinentryException(s);
-	}
+	PinentryConn conn_;
 };
 
 static_assert(IsUI<PinentryUI>::value,

@@ -17,7 +17,7 @@ ifdef LDEXTRA
 LDFLAGS += $(LDEXTRA)
 endif
 
-GRAVELBOX_OBJS ?= main trace/tracer parser/parser parser/argtypes ui/pinentry_ui
+GRAVELBOX_OBJS ?= main trace/tracer parser/parser parser/argtypes ui/pinentry_ui ui/pinentry_conn
 TEST_CLI_UI_OBJS ?= ui/test ui/cli_ui ui/pwd
 
 HEADERS := $(wildcard src/*.h) $(wildcard src/**/*.h)
