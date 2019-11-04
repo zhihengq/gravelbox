@@ -87,7 +87,7 @@ We also need to add extra compiler and linker flags to indicate the location of 
 We can build the binaries in debug mode:
 
 ```sh
-make SANITIZER= CXXEXTRA='-Ijsoncpp/include' LDEXTRA='-Ljsoncpp/build/src/lib_json'
+make SANITIZERS= CXXEXTRA='-Ijsoncpp/include' LDEXTRA='-Ljsoncpp/build/src/lib_json'
 ```
 
 or in release mode:
