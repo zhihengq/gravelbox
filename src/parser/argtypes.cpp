@@ -41,14 +41,21 @@ void PtrType::write(std::ostream &os, uint64_t value) const {
 
 void StrType::write(std::ostream &os, uint64_t value) const {
 	char buf[kMaxStrLen];
-	iovec local = {buf, kMaxStrLen};
-	iovec remote = {reinterpret_cast<void *>(value), kMaxStrLen};
-	ssize_t bytes
-		= Utils::check(::process_vm_readv(target_, &local, 1, &remote, 1, 0));
-	assert(bytes == kMaxStrLen); Utils::use(bytes);
+	::iovec local = {buf, kMaxStrLen};
+	::iovec remote[2] = {{reinterpret_cast<void *>(value), kMaxStrLen}};
+	size_t num_remotes = 1;
+	if (value / 4096 != (value + kMaxStrLen - 1) / 4096) {
+		remote[0].iov_len = 4096 - value % 4096;
+		remote[1].iov_base
+			= reinterpret_cast<void *>((value / 4096 + 1) * 4096);
+		remote[1].iov_len = kMaxStrLen - remote[0].iov_len;
+		num_remotes = 2;
+	}
+	size_t bytes = Utils::check(
+		::process_vm_readv(target_, &local, 1, remote, num_remotes, 0));
 	os << '\"';
 	size_t i;
-	for (i = 0; i < kMaxStrLen; i++) {
+	for (i = 0; i < bytes; i++) {
 		if (buf[i] == '\0')
 			break;
 		switch (buf[i]) {
