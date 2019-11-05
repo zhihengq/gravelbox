@@ -22,12 +22,13 @@ PinentryUI::PinentryUI(const std::string &pinentry) {
 	const char *ttyname = ::ttyname(0);
 	if (ttyname == nullptr)
 		Utils::throw_system_error();
-	pid_pinentry_ = Utils::spawn({pinentry, "--ttyname", ttyname}, [&fds]() {
-		check(::dup2(fds[0], 0));
-		check(::dup2(fds[3], 1));
-		for (int fd : fds)
-			check(::close(fd));
-	});
+	pid_pinentry_ = Utils::spawn(
+		{pinentry, "--ttyname", ttyname, "--lc-ctype", "utf-8"}, [&fds]() {
+			check(::dup2(fds[0], 0));
+			check(::dup2(fds[3], 1));
+			for (int fd : fds)
+				check(::close(fd));
+		});
 
 	// set up streams
 	conn_.open(std::move(from_pinentry_r), std::move(to_pinentry_w));
