@@ -3,7 +3,7 @@ OBJDIR ?= obj
 BINDIR ?= bin
 
 CXX ?= c++
-CXXFLAGS ?= -Wall -Werror -std=c++17 -fpic -I$(SRCDIR)
+CXXFLAGS ?= -Wall -std=c++17 -fpic -I$(SRCDIR)
 LDFLAGS ?= -fpie -L$(BINDIR)
 ENSUREDIR ?= @mkdir -p
 
