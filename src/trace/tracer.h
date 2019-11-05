@@ -5,6 +5,7 @@
 
 #include <sys/user.h>
 
+#include <cassert>
 #include <functional>
 #include <memory>
 #include <string>
@@ -32,7 +33,7 @@ void run_with_callbacks(
 /**
  * Tracer class spawns and traces child processes.
  */
-template <typename Parser, typename UI, typename Logger>
+template <typename Parser, typename Config, typename UI, typename Logger>
 class Tracer {
   public:
 	/**
@@ -43,10 +44,10 @@ class Tracer {
 	 * @param ui the ui object.
 	 * @param logger the logger object
 	 */
-	Tracer(std::unique_ptr<Parser> parser, std::unique_ptr<UI> ui,
-		   std::unique_ptr<Logger> logger) noexcept
-		: parser_(std::move(parser)), ui_(std::move(ui)),
-		  logger_(std::move(logger)) {}
+	Tracer(std::unique_ptr<Parser> parser, std::unique_ptr<Config> config,
+		   std::unique_ptr<UI> ui, std::unique_ptr<Logger> logger) noexcept
+		: parser_(std::move(parser)), config_(std::move(config)),
+		  ui_(std::move(ui)), logger_(std::move(logger)) {}
 
 	/**
 	 * Spawn and trace a child process.
@@ -57,20 +58,31 @@ class Tracer {
 	void run(const std::vector<std::string> &args) const {
 		TracerDetails::run_with_callbacks(
 			args, [&parser = *parser_](pid_t child) { parser.setpid(child); },
-			[&parser = *parser_, &ui = *ui_,
+			[&parser = *parser_, &config = *config_, &ui = *ui_,
 			 &logger = *logger_](const auto &regs) -> bool {
 				auto syscall_str = parser(regs);
 				logger.write(syscall_str);
-				return ui.ask(syscall_str);
+				switch (config.get_action(syscall_str)) {
+				case Config::Action::ALLOW:
+					return true;
+				case Config::Action::ASK:
+					return ui.ask(syscall_str);
+				case Config::Action::DENY:
+					return false;
+				default:
+					assert(false);
+				}
 			});
 	}
 
   private:
 	std::unique_ptr<Parser> parser_;
+	std::unique_ptr<Config> config_;
 	std::unique_ptr<UI> ui_;
 	std::unique_ptr<Logger> logger_;
 
 	static_assert(IsParser<Parser>::value, "Tracer must take in a Parser");
+	static_assert(IsConfig<Config>::value, "Tracer must take in a Config");
 	static_assert(IsUI<UI>::value, "Tracer must take in an UI");
 };
 

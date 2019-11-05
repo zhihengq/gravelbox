@@ -1,6 +1,7 @@
 #include <exceptions.h>
 #include <trace/tracer.h>
 #include <parser/parser.h>
+#include <config/file_config.h>
 #include <logger/logger.h>
 #include <ui/pinentry_ui.h>
 
@@ -11,22 +12,22 @@
 #include <system_error>
 #include <vector>
 
+constexpr char kConfigPath[] = "gravelbox_config.json";
+
 int main(int argc, char **argv) {
 	namespace po = boost::program_options;
 	po::variables_map vm;
-	po::options_description visible_desc{
-		"GravelBox usage:\n"
-		"  " + std::string(argv[0]) + " [options] -- target [args...]\n"
-		"Options"
-	};
-	visible_desc.add_options()
-		("help,h", "print help message")
-		("stdin,i", po::value<std::string>(), "redirected standard input")
-		("stdout,o", po::value<std::string>(), "redirected standard output")
-		("stderr,e", po::value<std::string>(), "redirected standard error");
+	po::options_description visible_desc{"GravelBox usage:\n"
+										 "  "
+										 + std::string(argv[0])
+										 + " [options] -- target [args...]\n"
+										   "Options"};
+	visible_desc.add_options()("help,h", "print help message")(
+		"stdin,i", po::value<std::string>(), "redirected standard input")(
+		"stdout,o", po::value<std::string>(), "redirected standard output")(
+		"stderr,e", po::value<std::string>(), "redirected standard error");
 	po::options_description desc = visible_desc;
-	desc.add_options()
-		("args", po::value<std::vector<std::string>>());
+	desc.add_options()("args", po::value<std::vector<std::string>>());
 	po::positional_options_description pod;
 	pod.add("args", -1);
 
@@ -59,10 +60,12 @@ int main(int argc, char **argv) {
 	}
 
 	try {
-		auto parser = std::make_unique<GravelBox::Parser>("syscalldef.json");
-		auto ui = std::make_unique<GravelBox::PinentryUI>("pinentry");
+		auto config = std::make_unique<GravelBox::FileConfig>(kConfigPath);
+		auto parser = std::make_unique<GravelBox::Parser>(config->syscalldef());
+		auto ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
 		auto logger = std::make_unique<GravelBox::Logger>();
-		GravelBox::Tracer tracer(std::move(parser), std::move(ui), std::move(logger));
+		GravelBox::Tracer tracer(std::move(parser), std::move(config),
+								 std::move(ui), std::move(logger));
 		// TODO(qzh): pass stdin/stdout/stderr to tracer
 		tracer.run(vm.at("args").as<std::vector<std::string>>());
 		return EXIT_SUCCESS;
@@ -73,8 +76,6 @@ int main(int argc, char **argv) {
 		std::cerr << "Configuration error: " << ce.what() << std::endl;
 	} catch (const GravelBox::PinentryException &pe) {
 		std::cerr << "Pinentry error: " << pe.what() << std::endl;
-	} catch (const GravelBox::ChildExitException &cee) {
-		return cee.exit_code;
-	}
+	} catch (const GravelBox::ChildExitException &cee) { return cee.exit_code; }
 	return EXIT_FAILURE;
 }

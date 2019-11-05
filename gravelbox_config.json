@@ -1,0 +1,35 @@
+{
+	"syscall-definition": "syscalldef.json",
+	"pinentry": "pinentry",
+	"max-string-length": 64,
+	"default-action": "allow",
+	"action-groups": [
+		{
+			"action": "allow",
+			"patterns": [
+				"openat\\(-?\\d+, \"/etc/ld\\.so\\.cache\", \\d+, \\d+\\)",
+				"open\\(\"/etc/ld\\.so\\.cache\", \\d+, \\d+\\)",
+
+				"openat\\(-?\\d+, \"/usr/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"open\\(\"/usr/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+
+				// attu specific
+				"open\\(\"/opt/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"open\\(\"/lib64/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)"
+			]
+		},
+		{
+			"action": "ask",
+			"patterns": [
+				"openat\\(.*\\)",
+				"open\\(.*\\)"
+			]
+		},
+		{
+			"action": "deny",
+			"patterns": [
+				"socket\\(.*\\)"
+			]
+		}
+	]
+}
