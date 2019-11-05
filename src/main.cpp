@@ -1,7 +1,7 @@
 #include <exceptions.h>
 #include <trace/tracer.h>
 #include <parser/parser.h>
-#include <config/debug_config.h>
+#include <config/file_config.h>
 #include <logger/logger.h>
 #include <ui/pinentry_ui.h>
 
@@ -11,6 +11,8 @@
 #include <string>
 #include <system_error>
 #include <vector>
+
+constexpr char kConfigPath[] = "gravelbox_config.json";
 
 int main(int argc, char **argv) {
 	namespace po = boost::program_options;
@@ -58,7 +60,7 @@ int main(int argc, char **argv) {
 	}
 
 	try {
-		auto config = std::make_unique<GravelBox::DebugConfig>();
+		auto config = std::make_unique<GravelBox::FileConfig>(kConfigPath);
 		auto parser = std::make_unique<GravelBox::Parser>(config->syscalldef());
 		auto ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
 		auto logger = std::make_unique<GravelBox::Logger>();

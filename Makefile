@@ -3,7 +3,7 @@ OBJDIR ?= obj
 BINDIR ?= bin
 
 CXX ?= c++
-CXXFLAGS ?= -Wall -std=c++17 -fpic -I$(SRCDIR)
+CXXFLAGS ?= -Wall -Werror -std=c++17 -fpic -I$(SRCDIR)
 LDFLAGS ?= -fpie -L$(BINDIR)
 ENSUREDIR ?= @mkdir -p
 
@@ -17,7 +17,7 @@ ifdef LDEXTRA
 LDFLAGS += $(LDEXTRA)
 endif
 
-GRAVELBOX_OBJS ?= main trace/tracer parser/parser parser/argtypes ui/pinentry_ui ui/pinentry_conn
+GRAVELBOX_OBJS ?= main trace/tracer parser/parser parser/argtypes config/file_config ui/pinentry_ui ui/pinentry_conn
 TEST_CLI_UI_OBJS ?= ui/test ui/cli_ui ui/pwd
 
 HEADERS := $(wildcard src/*.h) $(wildcard src/**/*.h)

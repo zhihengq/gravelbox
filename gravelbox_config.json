@@ -1,0 +1,27 @@
+{
+	"syscall-definition": "syscalldef.json",
+	"pinentry": "pinentry-curses",
+	"max-string-length": 64,
+	"default-action": "allow",
+	"action-groups": [
+		{
+			"action": "allow",
+			"patterns": [
+				"openat\\(-?\\d+, \"/etc/ld\\.so\\.cache\", \\d+, \\d+\\)",
+				"openat\\(-?\\d+, \"/usr/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)"
+			]
+		},
+		{
+			"action": "ask",
+			"patterns": [
+				"openat\\(.*\\)"
+			]
+		},
+		{
+			"action": "deny",
+			"patterns": [
+				"socket\\(.*\\)"
+			]
+		}
+	]
+}
