@@ -12,15 +12,23 @@
 
 namespace GravelBox {
 
+[[noreturn]] inline void error(const std::string &path,
+							   const std::string &details) {
+	throw ConfigException(path, "syscall definition", details);
+}
+
 Parser::Parser(const std::string &def) : str_(target_) {
 	try {
-		std::ifstream config(def, std::ifstream::binary);
+		std::ifstream config(def, std::ios::binary);
+		if (!config)
+			error(def, "file not found");
+		config.exceptions(std::ios::eofbit | std::ios::badbit);
 		Json::Value definitions;
 		config >> definitions;
 
 		auto sanitize = [&def](bool assertion, const std::string &details) {
 			if (!assertion)
-				throw ConfigException(def, "syscall definition", details);
+				error(def, details);
 		};
 
 		sanitize(definitions.isArray(), "definition list is not an array");
@@ -42,7 +50,7 @@ Parser::Parser(const std::string &def) : str_(target_) {
 			syscall_map_.emplace(number, std::move(syscalldef));
 		}
 	} catch (const Json::Exception &je) {
-		throw ConfigException(def, "syscall definition", je.what());
+		error(def, je.what());
 	}
 }
 
