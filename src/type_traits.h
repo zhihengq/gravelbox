@@ -36,6 +36,28 @@ struct IsUI<UI,
 				decltype(std::declval<UI>().ask(std::declval<std::string>())),
 				bool>::value>>> : std::true_type {};
 
+template <typename T, typename = void>
+struct IsConfig : std::false_type {};
+
+template <typename Config>
+struct IsConfig<
+	Config,
+	std::void_t<
+		typename Config::Action,
+		std::enable_if_t<
+			std::is_same<decltype(std::declval<const Config>().syscalldef()),
+						 std::string>::value>,
+		std::enable_if_t<
+			std::is_same<decltype(std::declval<const Config>().pinentry()),
+						 std::string>::value>,
+		std::enable_if_t<
+			std::is_same<decltype(std::declval<const Config>().max_str_len()),
+						 size_t>::value>,
+		std::enable_if_t<
+			std::is_same<decltype(std::declval<const Config>().get_action(
+							 std::declval<std::string>())),
+						 typename Config::Action>::value>>> : std::true_type {};
+
 }  // namespace GravelBox
 
 #endif  // TYPE_TRAITS_H_
