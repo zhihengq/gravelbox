@@ -35,9 +35,11 @@ endif
 
 all: build
 
-build: $(BINDIR)/gravelbox $(BINDIR)/test_cli_ui
+BUILD_LIST := gravelbox test_cli_ui
+build: $(patsubst %,$(BINDIR)/%,$(BUILD_LIST))
 
-targets: $(BINDIR)/print
+TARGET_LIST := print multi-threaded
+targets: $(patsubst %,$(BINDIR)/%,$(TARGET_LIST))
 
 test: $(BINDIR)/test_cli_ui
 	$(BINDIR)/test_cli_ui
@@ -49,6 +51,9 @@ clean:
 	rm -rf $(BINDIR) $(OBJDIR) doc
 
 .PHONY: all build test doc clean
+
+
+# Executables
 
 $(BINDIR)/gravelbox: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_OBJS))
 	$(ENSUREDIR) $(dir $@)
@@ -62,7 +67,14 @@ $(BINDIR)/print: $(OBJDIR)/c/targets/print.o
 	$(ENSUREDIR) $(dir $@)
 	$(CC) $(LDFLAGS) $^ -o $@
 
-$(OBJDIR)/c/%.o: $(SRCDIR)/%.c
+$(BINDIR)/multi-threaded: $(OBJDIR)/targets/multi-threaded.o
+	$(ENSUREDIR) $(dir $@)
+	$(CXX) $(LDFLAGS) $^ -o $@ -lpthread
+
+
+# Generic build rules for object files
+
+$(OBJDIR)/c/%.o: $(SRCDIR)/%.c $(HEADERS)
 	$(ENSUREDIR) $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
