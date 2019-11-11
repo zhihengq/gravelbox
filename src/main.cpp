@@ -67,8 +67,7 @@ int main(int argc, char **argv) {
 		GravelBox::Tracer tracer(std::move(parser), std::move(config),
 								 std::move(ui), std::move(logger));
 		// TODO(qzh): pass stdin/stdout/stderr to tracer
-		tracer.run(vm.at("args").as<std::vector<std::string>>());
-		return EXIT_SUCCESS;
+		return tracer.run(vm.at("args").as<std::vector<std::string>>());
 	} catch (const std::system_error &se) {
 		std::cerr << "System error " << se.code().value() << ": " << se.what()
 				  << std::endl;

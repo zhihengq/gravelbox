@@ -22,8 +22,9 @@ namespace TracerDetails {
  *
  * @param args the arguments used to spawn the child process.
  * @param callback a callback function when an syscall is intercepted.
+ * @return child process exit code.
  */
-void run_with_callbacks(
+int run_with_callbacks(
 	const std::vector<std::string> &args,
 	const std::function<void(pid_t)> &pid_callback,
 	const std::function<bool(user_regs_struct)> &syscall_callback);
@@ -55,8 +56,8 @@ class Tracer {
 	 *
 	 * @param args the arguments used to spawn the child process.
 	 */
-	void run(const std::vector<std::string> &args) const {
-		TracerDetails::run_with_callbacks(
+	int run(const std::vector<std::string> &args) const {
+		return TracerDetails::run_with_callbacks(
 			args, [&parser = *parser_](pid_t child) { parser.setpid(child); },
 			[&parser = *parser_, &config = *config_, &ui = *ui_,
 			 &logger = *logger_](const auto &regs) -> bool {
@@ -69,9 +70,9 @@ class Tracer {
 					return ui.ask(syscall_str);
 				case Config::Action::DENY:
 					return false;
-				default:
-					assert(false);
 				}
+				assert(false);
+				return false;
 			});
 	}
 
