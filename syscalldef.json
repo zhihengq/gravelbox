@@ -145,6 +145,16 @@
 		]
 	},
 	{
+		"number": 40,
+		"name": "sendfile",
+		"params": [
+			"int32_t",
+			"int32_t",
+			"void*",
+			"uint64_t"
+		]
+	},
+	{
 		"number": 41,
 		"name": "socket",
 		"params": [

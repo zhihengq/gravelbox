@@ -3,7 +3,9 @@ OBJDIR ?= obj
 BINDIR ?= bin
 
 CXX ?= c++
+CC ?= cc
 CXXFLAGS ?= -Wall -std=c++17 -fpic -I$(SRCDIR)
+CFLAGS ?= -Wall -std=c11 -fpic -I$(SRCDIR)
 LDFLAGS ?= -fpie -L$(BINDIR)
 ENSUREDIR ?= @mkdir -p
 
@@ -24,14 +26,18 @@ HEADERS := $(wildcard src/*.h) $(wildcard src/**/*.h)
 
 ifdef RELEASE
 CXXFLAGS += -DNDEBUG -O3
+CFLAGS += -DNDEBUG -O3
 else
-CXXFLAGS += -g -Og $(SANITIZERS)
+CXXFLAGS += -g -O0 $(SANITIZERS)
+CFLAGS += -g -O0 $(SANITIZERS)
 LDFLAGS += $(SANITIZERS)
 endif
 
 all: build
 
 build: $(BINDIR)/gravelbox $(BINDIR)/test_cli_ui
+
+targets: $(BINDIR)/print
 
 test: $(BINDIR)/test_cli_ui
 	$(BINDIR)/test_cli_ui
@@ -51,6 +57,14 @@ $(BINDIR)/gravelbox: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_OBJS))
 $(BINDIR)/test_cli_ui: $(patsubst %,$(OBJDIR)/%.o,$(TEST_CLI_UI_OBJS))
 	$(ENSUREDIR) $(dir $@)
 	$(CXX) $(LDFLAGS) $^ -o $@
+
+$(BINDIR)/print: $(OBJDIR)/c/targets/print.o
+	$(ENSUREDIR) $(dir $@)
+	$(CC) $(LDFLAGS) $^ -o $@
+
+$(OBJDIR)/c/%.o: $(SRCDIR)/%.c
+	$(ENSUREDIR) $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS)
 	$(ENSUREDIR) $(dir $@)
