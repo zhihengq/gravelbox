@@ -72,8 +72,15 @@ struct IsConfig<
 						 size_t>::value>,
 		std::enable_if_t<
 			std::is_same<decltype(std::declval<const Config>().get_action(
-							 std::declval<std::string>())),
-						 typename Config::Action>::value>>> : std::true_type {};
+							 std::declval<const std::string>())),
+						 typename Config::Action>::value>,
+		std::enable_if_t<
+			std::is_same<decltype(std::declval<const Config>().has_password()),
+						 bool>::value>,
+		std::enable_if_t<
+			std::is_same<decltype(std::declval<const Config>().verify_password(
+							 std::declval<const std::string>())),
+						 bool>::value>>> : std::true_type {};
 
 }  // namespace GravelBox
 

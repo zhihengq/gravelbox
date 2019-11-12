@@ -13,7 +13,7 @@ namespace GravelBox {
 
 int run(const boost::program_options::variables_map &vm) {
 	auto config = std::make_unique<GravelBox::FileConfig>(
-		vm.at("config").as<std::string>());
+		vm.at("config").as<std::string>(), "");
 	auto parser = std::make_unique<GravelBox::Parser>(config->syscalldef());
 	auto ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
 	auto logger = std::make_unique<GravelBox::Logger>();

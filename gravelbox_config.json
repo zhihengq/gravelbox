@@ -1,20 +1,17 @@
 {
+	"password": "77e8ad11c6fc4470e7d768b5be68b4dc3163dd11a885b921ba1ae12903c4e7a56f6ed61dc6b93e93ca875ac1da9f12c595d0cfabd39a76c1acd734d555a830f3",
 	"syscall-definition": "syscalldef.json",
 	"pinentry": "pinentry",
-	"max-string-length": 64,
+	"max-string-length": 128,
 	"default-action": "allow",
 	"action-groups": [
 		{
 			"action": "ask",
 			"patterns": [
-				"openat\\(-?\\d+, \"/home/[a-zA-Z]+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
-				"open\\(\"/home/[a-zA-Z]+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)"
-			]
-		},
-		{
-			"action": "deny",
-			"patterns": [
-				"socket\\(.*\\)"
+				"openat\\(-?\\d+, \"[^/.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"open\\(\"[^/.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"openat\\(-?\\d+, \"/home/\\w+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"open\\(\"/home/\\w+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)"
 			]
 		}
 	]

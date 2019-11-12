@@ -20,7 +20,7 @@ class FileConfig {
 	 *
 	 * @param config_path the path of the configuration file.
 	 */
-	explicit FileConfig(const std::string &config_path);
+	explicit FileConfig(const std::string &config_path, std::string &&key);
 
 	/**
 	 * Return path of the system call definition file.
@@ -53,6 +53,28 @@ class FileConfig {
 	Action get_action(const std::string &syscall) const noexcept;
 
 	/**
+	 * Check if the configuration contains a password for user interactions.
+	 *
+	 * @return true if there is a password. Password should be verified before
+	 * accepting user decisions.
+	 * @return false if there is no password. Unconditionally accept user
+	 * decisions.
+	 */
+	bool has_password() const noexcept {
+		return !password_hash_.empty();
+	}
+
+	/**
+	 * Verify password for user interactions.
+	 *
+	 * @param password password entered by the user.
+	 * @return true if the password is correct or if the config contains no
+	 * password.
+	 * @return false if the password is incorrect.
+	 */
+	bool verify_password(const std::string &password) const noexcept;
+
+	/**
 	 * Copy constructor.
 	 */
 	FileConfig(const FileConfig &) = default;
@@ -70,6 +92,8 @@ class FileConfig {
 			: action(a), patterns(std::move(p)) {}
 	};
 
+	const std::string key_;
+	std::string password_hash_;
 	std::string syscalldef_;
 	std::string pinentry_;
 	size_t max_str_len_;

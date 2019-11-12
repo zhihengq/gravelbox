@@ -71,8 +71,26 @@ class Tracer {
 				switch (config.get_action(syscall_str)) {
 				case Config::Action::ALLOW:
 					return true;
-				case Config::Action::ASK:
-					return ui.ask(syscall_str);
+				case Config::Action::ASK: {
+					if (!ui.ask(syscall_str))
+						return false;
+					if (!config.has_password())
+						return true;
+					constexpr auto message
+						= "Enter the user decision password to continue.";
+					constexpr auto prompt = "password: ";
+					typename UI::Password password
+						= ui.ask_password(message, prompt, "");
+					if (!password)
+						return false;
+					while (!config.verify_password(password.password)) {
+						password = ui.ask_password(message, prompt,
+												   "Incorrect password");
+						if (!password)
+							return false;
+					}
+					return true;
+				}
 				case Config::Action::DENY:
 					return false;
 				}
