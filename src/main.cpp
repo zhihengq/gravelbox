@@ -8,6 +8,8 @@
 #include <system_error>
 #include <vector>
 
+constexpr char kDefaultConfig[] = "gravelbox_config.json";
+
 int main(int argc, char **argv) {
 	namespace po = boost::program_options;
 	po::variables_map vm;
@@ -16,10 +18,12 @@ int main(int argc, char **argv) {
 										 + std::string(argv[0])
 										 + " [options] -- target [args...]\n"
 										   "Options"};
-	visible_desc.add_options()("help,h", "print help message")(
-		"stdin,i", po::value<std::string>(), "redirected standard input")(
-		"stdout,o", po::value<std::string>(), "redirected standard output")(
-		"stderr,e", po::value<std::string>(), "redirected standard error");
+	visible_desc.add_options()("help,h", "print help message")
+		("stdin,i", po::value<std::string>(), "redirected standard input")
+		("stdout,o", po::value<std::string>(), "redirected standard output")
+		("stderr,e", po::value<std::string>(), "redirected standard error")
+		("config,c", po::value<std::string>()->default_value(kDefaultConfig),
+					 "configuration file path");
 	po::options_description desc = visible_desc;
 	desc.add_options()("args", po::value<std::vector<std::string>>());
 	po::positional_options_description pod;
