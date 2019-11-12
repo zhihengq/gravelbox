@@ -28,7 +28,16 @@ class DebugUI {
 	 * Password struct. Always empty.
 	 */
 	struct Password {
+		/**
+		 * Always empty.
+		 */
 		std::string password;
+
+		/**
+		 * Return cancelled.
+		 *
+		 * @return false
+		 */
 		operator bool() const noexcept { return false; }
 	};
 

@@ -13,6 +13,10 @@ constexpr uint32_t kCancel = 83886179;
 
 namespace GravelBox {
 
+/**
+ * The pipe connection between GravelBox and pinentry.
+ * Used by PinentryUI.
+ */
 class PinentryConn {
   public:
 	/**
@@ -76,8 +80,25 @@ class PinentryConn {
 	 * Result of `getpin` pinentry command.
 	 */
 	struct Password {
+		/**
+		 * Whether the user cancelled the interaction.
+		 */
 		bool cancelled;
+
+		/**
+		 * The password entered by the user if the user did not cancel the
+		 * interaction.
+		 */
 		std::string password;
+
+		/**
+		 * Return whether this struct contains a password (not cancelled).
+		 *
+		 * @return true if the user did not cancel the interaction and
+		 * `password` contains a password.
+		 * @return false if the user cancelled the interaction and `password` is
+		 * empty.
+		 */
 		operator bool() const noexcept { return !cancelled; }
 	};
 

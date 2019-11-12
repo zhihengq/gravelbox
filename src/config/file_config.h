@@ -14,7 +14,11 @@ namespace GravelBox {
  */
 class FileConfig {
   public:
+	/**
+	 * Possible actions returned by configuration rules.
+	 */
 	enum class Action { ALLOW, DENY, ASK };
+
 	/**
 	 * Construct a FileConfig from a configuration file.
 	 *

@@ -21,6 +21,9 @@ namespace GravelBox {
  */
 class PinentryUI {
   public:
+	/**
+	 * Result returned by `PinentryConn`.
+	 */
 	using Password = PinentryConn::Password;
 
 	/**

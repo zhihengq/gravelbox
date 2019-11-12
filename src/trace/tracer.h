@@ -40,10 +40,11 @@ template <typename Parser, typename Config, typename UI, typename Logger>
 class Tracer {
   public:
 	/**
-	 * Construct a Tracer with a parser, a UI, and a logger.
-	 * The tracer will take ownership of the parser, ui, and logger objects.
+	 * Construct a Tracer with a parser, a config, a UI, and a logger.
+	 * The tracer will take ownership of the parser, config, ui, and logger objects.
 	 *
 	 * @param parser the parser object.
+	 * @param config the config object
 	 * @param ui the ui object.
 	 * @param logger the logger object
 	 */
@@ -57,6 +58,11 @@ class Tracer {
 	 * Return after the child process exits.
 	 *
 	 * @param args the arguments used to spawn the child process.
+	 * @param std_in the redirected path of stdin, or "-" if not redirected.
+	 * @param std_out the redirected path of stdout, or "-" if not redirected.
+	 * @param append_stdout whether the redirected stdout should be opened in APPEND mode.
+	 * @param std_err the redirected path of stderr, or "-" if not redirected.
+	 * @param append_stderr whether the redirected stderr should be opened in APPEND mode.
 	 */
 	int run(const std::vector<std::string> &args, const std::string &std_in,
 			const std::string &std_out, bool append_stdout,
