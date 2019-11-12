@@ -9,6 +9,8 @@
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/stream.hpp>
 
+constexpr uint32_t kCancel = 83886179;
+
 namespace GravelBox {
 
 class PinentryConn {
@@ -57,12 +59,56 @@ class PinentryConn {
 	bool confirm(const std::string &message) {
 		os_ << "SETDESC " << message << std::endl;
 		ok();
+		os_ << "SETOK Allow" << std::endl;
+		ok();
+		os_ << "SETCANCEL Deny" << std::endl;
+		ok();
 		os_ << "CONFIRM" << std::endl;
 		Response r = recv();
 		if (r)
 			return true;
-		if (r.code == 83886179)
+		if (r.code == kCancel)
 			return false;
+		r.throw_error();
+	}
+
+	/**
+	 * Result of `getpin` pinentry command.
+	 */
+	struct Password {
+		bool cancelled;
+		std::string password;
+		operator bool() const noexcept { return !cancelled; }
+	};
+
+	/**
+	 * Ask the user for a password.
+	 *
+	 * @param message descriptive message on the password dialog.
+	 * @param prompt prompt on the password dialog.
+	 * @param error error message on the password dialog, or empty for no error.
+	 * @return Password user typed password, or cancelled.
+	 */
+	Password getpin(const std::string &message, const std::string &prompt,
+					const std::string &error) {
+		os_ << "SETDESC " << message << std::endl;
+		ok();
+		os_ << "SETPROMPT " << prompt << std::endl;
+		ok();
+		os_ << "SETOK OK" << std::endl;
+		ok();
+		os_ << "SETCANCEL Cancel" << std::endl;
+		ok();
+		if (!error.empty()) {
+			os_ << "SETERROR " << error << std::endl;
+			ok();
+		}
+		os_ << "GETPIN" << std::endl;
+		Response r = recv();
+		if (r)
+			return {false, r.data};
+		if (r.code == kCancel)
+			return {true, ""};
 		r.throw_error();
 	}
 
