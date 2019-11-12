@@ -15,6 +15,7 @@ GravelBox would also have various configurations that can be set pre-run to allo
   - `src/config`: code to save/load configuration files
   - `src/test`: test code
 - `doc`: documentation
+- `targets`: example targets to be traced
 
 ## Dependencies
 
@@ -37,6 +38,12 @@ make build
 
 # build docs
 make doc
+
+# build example targets in debug mode
+make targets
+
+# build example targets in release mode
+make RELEASE=1 targets
 
 # test
 make test

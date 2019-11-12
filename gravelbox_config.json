@@ -5,24 +5,10 @@
 	"default-action": "allow",
 	"action-groups": [
 		{
-			"action": "allow",
-			"patterns": [
-				"openat\\(-?\\d+, \"/etc/ld\\.so\\.cache\", \\d+, \\d+\\)",
-				"open\\(\"/etc/ld\\.so\\.cache\", \\d+, \\d+\\)",
-
-				"openat\\(-?\\d+, \"/usr/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
-				"open\\(\"/usr/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
-
-				// attu specific
-				"open\\(\"/opt/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
-				"open\\(\"/lib64/.*\"(\\.\\.\\.)?, \\d+, \\d+\\)"
-			]
-		},
-		{
 			"action": "ask",
 			"patterns": [
-				"openat\\(.*\\)",
-				"open\\(.*\\)"
+				"openat\\(-?\\d+, \"/home/[a-zA-Z]+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"open\\(\"/home/[a-zA-Z]+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)"
 			]
 		},
 		{

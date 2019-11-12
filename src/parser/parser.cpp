@@ -62,7 +62,7 @@ std::string Parser::operator()(const user_regs_struct &regs) const noexcept {
 	if (syscall_map_.count(regs.orig_rax) == 0) {
 		oss << "syscall(" << std::dec << regs.orig_rax << ", " << std::hex;
 		for (size_t i = 0; i < 6; i++)
-			oss << "0x" << regs.rdi << (i < 5 ? ", " : ")");
+			oss << "0x" << args[i] << (i < 5 ? ", " : ")");
 	} else {
 		syscall_map_.at(regs.orig_rax).write(oss, args);
 	}
