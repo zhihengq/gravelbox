@@ -14,8 +14,18 @@ namespace GravelBox {
 int run(const boost::program_options::variables_map &vm) {
 	auto config = std::make_unique<GravelBox::FileConfig>(
 		vm.at("config").as<std::string>());
-	auto parser = std::make_unique<GravelBox::Parser>(config->syscalldef());
 	auto ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
+	constexpr auto message = "Enter the configuration file signing key.";
+	constexpr auto prompt = "key: ";
+	PinentryUI::Password key = ui->ask_password(message, prompt, "");
+	if (!key)
+		return EXIT_FAILURE;
+	while (!config->verify_signature(std::move(key.password))) {
+		key = ui->ask_password(message, prompt, "Incorrect password");
+		if (!key)
+			return EXIT_FAILURE;
+	}
+	auto parser = std::make_unique<GravelBox::Parser>(config->syscalldef());
 	auto logger = std::make_unique<GravelBox::Logger>();
 	GravelBox::Tracer tracer(std::move(parser), std::move(config),
 							 std::move(ui), std::move(logger));

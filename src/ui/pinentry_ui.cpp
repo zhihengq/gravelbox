@@ -11,7 +11,7 @@ namespace GravelBox {
 
 using Utils::check;
 
-PinentryUI::PinentryUI(const std::string &pinentry) : pid_self_(::getpid()){
+PinentryUI::PinentryUI(const std::string &pinentry) : pid_self_(::getpid()) {
 	// set up pipes
 	int fds[4];
 	check(::pipe2(fds + 0, O_CLOEXEC));
@@ -48,7 +48,7 @@ PinentryUI::~PinentryUI() {
 
 bool PinentryUI::ask(const std::string &syscall) {
 	std::string message
-		= "Do you allow the following system call?%0a" + syscall;
+		= "Do you allow the following system call?%0a%0a" + syscall;
 	return conn_.confirm(message);
 }
 

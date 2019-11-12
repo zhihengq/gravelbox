@@ -21,6 +21,8 @@ namespace GravelBox {
  */
 class PinentryUI {
   public:
+	using Password = PinentryConn::Password;
+
 	/**
 	 * Construct a PinentryUI object and launch pinentry process.
 	 *
@@ -44,6 +46,19 @@ class PinentryUI {
 	 * @return false if the user denies the syscall.
 	 */
 	bool ask(const std::string &syscall);
+
+	/**
+	 * Ask the user for a password.
+	 *
+	 * @param message descriptive message on the password dialog.
+	 * @param prompt prompt on the password dialog.
+	 * @param error error message on the password dialog, or empty for no error.
+	 * @return Password user typed password, or cancelled.
+	 */
+	Password ask_password(const std::string &message, const std::string &prompt,
+						  const std::string &error) {
+		return conn_.getpin(message, prompt, error);
+	}
 
   private:
 	const pid_t pid_self_;

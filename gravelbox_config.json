@@ -1,20 +1,18 @@
 {
+	"signature": "gravelbox_config.sig",
+	"password": "5fc0801a86a09e77cab7d37353d15b805692477a2b7972a290894c0b927c5d8d5ffd67cc81ec1c691878788a9ee6aa86f04fe0c176455ff1e9a314dab28bd751",
 	"syscall-definition": "syscalldef.json",
 	"pinentry": "pinentry",
-	"max-string-length": 64,
+	"max-string-length": 128,
 	"default-action": "allow",
 	"action-groups": [
 		{
 			"action": "ask",
 			"patterns": [
-				"openat\\(-?\\d+, \"/home/[a-zA-Z]+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
-				"open\\(\"/home/[a-zA-Z]+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)"
-			]
-		},
-		{
-			"action": "deny",
-			"patterns": [
-				"socket\\(.*\\)"
+				"openat\\(-?\\d+, \"[^/.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"open\\(\"[^/.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"openat\\(-?\\d+, \"/home/\\w+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)",
+				"open\\(\"/home/\\w+/[^.].*\"(\\.\\.\\.)?, \\d+, \\d+\\)"
 			]
 		}
 	]

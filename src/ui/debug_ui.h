@@ -23,6 +23,24 @@ class DebugUI {
 		std::cerr << syscall << std::endl;
 		return true;
 	}
+
+	/**
+	 * Password struct. Always empty.
+	 */
+	struct Password {
+		std::string password;
+		operator bool() const noexcept { return false; }
+	};
+
+	/**
+	 * Return cancelled.
+	 *
+	 * @return Password cancelled.
+	 */
+	Password ask_password(const std::string &, const std::string &,
+						  const std::string &) {
+		return {""};
+	}
 };
 
 static_assert(IsUI<DebugUI>::value, "DebugUI does not fulfill UI");

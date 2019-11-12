@@ -35,7 +35,7 @@ endif
 
 all: build
 
-BUILD_LIST := gravelbox test_cli_ui
+BUILD_LIST := gravelbox
 build: $(patsubst %,$(BINDIR)/%,$(BUILD_LIST))
 
 TARGET_LIST := print multi-threaded
@@ -57,7 +57,7 @@ clean:
 
 $(BINDIR)/gravelbox: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_OBJS))
 	$(ENSUREDIR) $(dir $@)
-	$(CXX) $(LDFLAGS) $^ -o $@ -lboost_program_options -lboost_iostreams -ljsoncpp
+	$(CXX) $(LDFLAGS) $^ -o $@ -lboost_program_options -lboost_iostreams -ljsoncpp -lcrypto
 
 $(BINDIR)/test_cli_ui: $(patsubst %,$(OBJDIR)/%.o,$(TEST_CLI_UI_OBJS))
 	$(ENSUREDIR) $(dir $@)

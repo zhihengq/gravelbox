@@ -18,10 +18,6 @@ void PinentryConn::open(Utils::Fd pipe_in, Utils::Fd pipe_out) {
 	ok();
 	os_ << "SETTITLE GravelBox" << std::endl;
 	ok();
-	os_ << "SETOK Allow" << std::endl;
-	ok();
-	os_ << "SETCANCEL Deny" << std::endl;
-	ok();
 }
 
 PinentryConn::Response PinentryConn::recv() {

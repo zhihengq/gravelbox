@@ -48,6 +48,23 @@ class DebugConfig {
 	Action get_action(const std::string &syscall) const noexcept {
 		return Action::ASK;
 	}
+
+	/**
+	 * Check if the configuration contains a password for user interactions.
+	 *
+	 * @return false.
+	 */
+	bool has_password() const noexcept { return false; }
+
+	/**
+	 * Verify password for user interactions.
+	 *
+	 * @param password password entered by the user.
+	 * @return true.
+	 */
+	bool verify_password(const std::string &password) const noexcept {
+		return true;
+	}
 };
 
 static_assert(IsConfig<DebugConfig>::value,
