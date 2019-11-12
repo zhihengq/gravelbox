@@ -1,8 +1,14 @@
 # GravelBox
 
-GravelBox is a sandbox utility that allows the user to perform a controlled run of a binary executable, suspending it when the program attempts to perform actions such as writing/reading files, connecting to network, using the camera/microphone/speaker.
+GravelBox is a sandbox utility that allows the user to run of a binary executable with a controlled set of permissions.
+GravelBox works by suspending the target program when it attempts to access system resources such as writing/reading files and connecting to network.
 GravelBox would then give the user an option to allow or deny this access.
-GravelBox would also have various configurations that can be set pre-run to allow/deny any combination of the permissions.
+GravelBox would also have pre-set configurations that can allow or deny any combination of the permissions automatically.
+
+The configuration file should be signed by a key using HMAC-SHA-3-512 before GravelBox starts.
+When GravelBox starts, it will ask the user for this signing key to verify the integrity and authenticity of the configuration file.
+If the configuration is not signed by the key provided by the user, it may suggest that the configuration file might have been tampered with.
+The user can also optionally set a password that needs to be entered every time when the user want to allow a system call.
 
 ## Directories
 
@@ -117,6 +123,47 @@ make doc
 ```
 
 You can find the binary under `bin` directory and the documentation under `doc` directory.
+
+## Configuring GravelBox
+
+The default path of the configuration file is `gravelbox_config.json` under the working directory of GravelBox.
+The configuration should be a JSON file.
+The settings include:
+
+- `signature`:
+    The path of the signature file.
+- `password`:
+    a hash of the user decision password that needs to be entered every time when the user want to allow a system call.
+    GravelBox will not ask the user for password if this setting is missing or empty.
+- `syscall-definition`:
+    The path of the system call definition file.
+- `pinentry`:
+    The pinentry UI program to use.
+- `max-string-length`:
+    The maximum number of characters to display when displaying a string parameter.
+- `action-group`:
+    A list of action groups, each containing a list of regular expressions and an action if one of the regular expressions matches the system call.
+    An action can be "allow", "deny", or "ask".
+    Earlier action groups will shadow later action groups.
+- `default-action`:
+    An action to take if no action group matches a system call.
+
+## Configuration File Signing Key and User Decision Password
+
+There are two passwords for GravelBox:
+
+- The configuration file signing key is used to generate a MAC for the configuration file.
+  It is not saved anywhere and must be entered every time the user starts GravelBox.
+- The user decision password is used to authenticate the user when the user choose to allow a system call by interacting with GravelBox UI.
+  The hash of the user decision password is saved in the configuration file.
+  The user can choose to not use a user decision password by making the hash empty.
+
+Both the configuration file signature and the password hash are generated using HMAC-SHA-3-512.
+The signature file is a binary file containing exactly the signature (64 bytes).
+The password hash in the configuration file is hex encoded and should be 128 characters long.
+
+The user can pass `-n` or `--no-signature` flags to GravelBox to skip signature verification.
+However, GravelBox will then assume the configuration file is not protected by a key, which means the password is hashed by an empty key.
 
 ## Running GravelBox
 
