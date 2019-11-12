@@ -46,6 +46,7 @@ class PinentryUI {
 	bool ask(const std::string &syscall);
 
   private:
+	const pid_t pid_self_;
 	pid_t pid_pinentry_;
 	PinentryConn conn_;
 };

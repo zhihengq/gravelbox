@@ -33,9 +33,11 @@ int run_with_callbacks(
 	// wait for child process to be ready for trace
 	int wstatus;
 	check(::waitpid(child, &wstatus, 0));
-	if (WIFEXITED(wstatus))
+	if (WIFEXITED(wstatus) || WIFSIGNALED(wstatus)) {
 		// child process fails to start and has printed the error
-		throw ChildExitException{WEXITSTATUS(wstatus)};
+		throw ChildExitException{WIFEXITED(wstatus) ? WEXITSTATUS(wstatus)
+													: 128 + WTERMSIG(wstatus)};
+	}
 	assert(WIFSTOPPED(wstatus) && WSTOPSIG(wstatus) == SIGSTOP);
 
 	// set-up trace

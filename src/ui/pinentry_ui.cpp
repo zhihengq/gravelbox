@@ -1,8 +1,9 @@
 #include "pinentry_ui.h"
 #include <utils.h>
 
-#include <unistd.h>
+#include <fcntl.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include <string>
 
@@ -10,10 +11,10 @@ namespace GravelBox {
 
 using Utils::check;
 
-PinentryUI::PinentryUI(const std::string &pinentry) {
+PinentryUI::PinentryUI(const std::string &pinentry) : pid_self_(::getpid()){
 	// set up pipes
 	int fds[4];
-	check(::pipe(fds + 0));
+	check(::pipe2(fds + 0, O_CLOEXEC));
 	Utils::Fd to_pinentry_r(fds[0]);
 	Utils::Fd to_pinentry_w(fds[1]);
 	check(::pipe(fds + 2));
@@ -35,6 +36,10 @@ PinentryUI::PinentryUI(const std::string &pinentry) {
 }
 
 PinentryUI::~PinentryUI() {
+	if (::getpid() != pid_self_) {
+		// forked instance, do not destruct
+		return;
+	}
 	conn_.close();
 	int wstatus;
 	check(::waitpid(pid_pinentry_, &wstatus, 0));
