@@ -55,52 +55,65 @@ int run_with_callbacks(
 	// start tracing
 	while (true) {
 		child = check(::waitpid(-1, &wstatus, 0));
-		if (WIFEXITED(wstatus)) {
+		if (WIFEXITED(wstatus) || WIFSIGNALED(wstatus)) {
 			thread_status.erase(child);
 			if (thread_status.size() == 0)
-				return WEXITSTATUS(wstatus);
+				return WIFEXITED(wstatus)
+						   ? WEXITSTATUS(wstatus)
+						   : 128 + WTERMSIG(wstatus);  // consistent with bash
 			continue;
 		}
-		if (WIFSTOPPED(wstatus)) {
-			switch (WSTOPSIG(wstatus)) {
-			case SIGSTOP:
-				if (thread_status.find(child) == thread_status.end())
-					thread_status[child] = ThreadStatus::USERSPACE;
-				break;
-			case SIGTRAP | 0x80:
-				// syscall-enter-stop or syscall-exit-stop
-				switch (thread_status.at(child)) {
-				case ThreadStatus::USERSPACE: {
-					// syscall-enter-stop
-					user_regs_struct regs;
-					check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
-					pid_callback(child);
-					if (syscall_callback(regs)) {
-						thread_status[child] = ThreadStatus::KERNELSPACE_ALLOW;
-					} else {
-						regs.orig_rax = -1;
+		try {
+			if (WIFSTOPPED(wstatus)) {
+				switch (WSTOPSIG(wstatus)) {
+				case SIGSTOP:
+					if (thread_status.find(child) == thread_status.end())
+						thread_status[child] = ThreadStatus::USERSPACE;
+					break;
+				case SIGTRAP | 0x80:
+					// syscall-enter-stop or syscall-exit-stop
+					switch (thread_status.at(child)) {
+					case ThreadStatus::USERSPACE: {
+						// syscall-enter-stop
+						user_regs_struct regs;
+						check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
+						pid_callback(child);
+						if (syscall_callback(regs)) {
+							thread_status[child]
+								= ThreadStatus::KERNELSPACE_ALLOW;
+						} else {
+							regs.orig_rax = -1;
+							check(::ptrace(PTRACE_SETREGS, child, nullptr,
+										   &regs));
+							thread_status[child]
+								= ThreadStatus::KERNELSPACE_DENY;
+						}
+						break;
+					}
+					case ThreadStatus::KERNELSPACE_DENY: {
+						// syscall-exit-stop
+						user_regs_struct regs;
+						check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
+						regs.rax = -EPERM;
 						check(::ptrace(PTRACE_SETREGS, child, nullptr, &regs));
-						thread_status[child] = ThreadStatus::KERNELSPACE_DENY;
+						[[fallthrough]];
+					}
+					case ThreadStatus::KERNELSPACE_ALLOW: {
+						// syscall-exit-stop
+						thread_status[child] = ThreadStatus::USERSPACE;
+						break;
+					}
 					}
 					break;
 				}
-				case ThreadStatus::KERNELSPACE_DENY: {
-					// syscall-exit-stop
-					user_regs_struct regs;
-					check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
-					regs.rax = -EPERM;
-					check(::ptrace(PTRACE_SETREGS, child, nullptr, &regs));
-					[[fallthrough]];
-				}
-				case ThreadStatus::KERNELSPACE_ALLOW: {
-					// syscall-exit-stop
-					thread_status[child] = ThreadStatus::USERSPACE;
-					break;
-				}
-				}
-				break;
+				check(::ptrace(PTRACE_SYSCALL, child, nullptr, 0));
 			}
-			check(::ptrace(PTRACE_SYSCALL, child, nullptr, 0));
+		} catch (const std::system_error &se) {
+			if (se.code().value() == ESRCH) {
+				// tracee died during stop
+				// clean-up only when we see the exit notification
+				continue;
+			}
 		}
 	}
 }
