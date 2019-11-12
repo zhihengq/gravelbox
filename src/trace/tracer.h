@@ -25,7 +25,9 @@ namespace TracerDetails {
  * @return child process exit code.
  */
 int run_with_callbacks(
-	const std::vector<std::string> &args,
+	const std::vector<std::string> &args, const std::string &std_in,
+	const std::string &std_out, bool append_stdout,
+	const std::string &std_err, bool append_stderr,
 	const std::function<void(pid_t)> &pid_callback,
 	const std::function<bool(user_regs_struct)> &syscall_callback);
 
@@ -56,9 +58,12 @@ class Tracer {
 	 *
 	 * @param args the arguments used to spawn the child process.
 	 */
-	int run(const std::vector<std::string> &args) const {
+	int run(const std::vector<std::string> &args, const std::string &std_in,
+			const std::string &std_out, bool append_stdout,
+			const std::string &std_err, bool append_stderr) const {
 		return TracerDetails::run_with_callbacks(
-			args, [&parser = *parser_](pid_t child) { parser.setpid(child); },
+			args, std_in, std_out, append_stdout, std_err, append_stderr,
+			[&parser = *parser_](pid_t child) { parser.setpid(child); },
 			[&parser = *parser_, &config = *config_, &ui = *ui_,
 			 &logger = *logger_](const auto &regs) -> bool {
 				auto syscall_str = parser(regs);

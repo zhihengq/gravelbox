@@ -3,6 +3,8 @@
 #include <exceptions.h>
 
 #include <linux/version.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
 #include <sys/ptrace.h>
@@ -21,14 +23,34 @@ using Utils::check;
 enum class ThreadStatus { USERSPACE, KERNELSPACE_ALLOW, KERNELSPACE_DENY };
 
 int run_with_callbacks(
-	const std::vector<std::string> &args,
+	const std::vector<std::string> &args, const std::string &std_in,
+	const std::string &std_out, bool append_stdout,
+	const std::string &std_err, bool append_stderr,
 	const std::function<void(pid_t)> &pid_callback,
 	const std::function<bool(user_regs_struct)> &syscall_callback) {
 	// spawn child
-	pid_t child = Utils::spawn(args, []() {
+	pid_t child = Utils::spawn(args, [&]() {
 		check(::ptrace(PTRACE_TRACEME, 0, nullptr, nullptr));
 		if (::raise(SIGSTOP) != 0)
 			Utils::throw_system_error();
+		if (std_in != "-") {
+			Utils::Fd fd(check(::open(std_in.c_str(), O_RDONLY)));
+			check(::dup2(fd, 0));
+		}
+		if (std_out != "-") {
+			Utils::Fd fdout(check(::open(
+				std_out.c_str(),
+				O_WRONLY | O_CREAT | (append_stdout ? O_APPEND : 0),
+				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)));
+			check(::dup2(fdout, 1));
+		}
+		if (std_err != "-") {
+			Utils::Fd fderr(check(::open(
+				std_err.c_str(),
+				O_WRONLY | O_CREAT | (append_stderr ? O_APPEND : 0),
+				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)));
+			check(::dup2(fderr, 2));
+		}
 	});
 	// wait for child process to be ready for trace
 	int wstatus;
@@ -115,6 +137,8 @@ int run_with_callbacks(
 				// tracee died during stop
 				// clean-up only when we see the exit notification
 				continue;
+			} else {
+				throw se;
 			}
 		}
 	}

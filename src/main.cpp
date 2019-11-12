@@ -18,10 +18,13 @@ int main(int argc, char **argv) {
 										 + std::string(argv[0])
 										 + " [options] -- target [args...]\n"
 										   "Options"};
-	visible_desc.add_options()("help,h", "print help message")
+	visible_desc.add_options()
+		("help,h", "print help message")
 		("stdin,i", po::value<std::string>(), "redirected standard input")
 		("stdout,o", po::value<std::string>(), "redirected standard output")
 		("stderr,e", po::value<std::string>(), "redirected standard error")
+		("append-stdout", po::bool_switch(), "append to standard output")
+		("append-stderr", po::bool_switch(), "append to standard error")
 		("config,c", po::value<std::string>()->default_value(kDefaultConfig),
 					 "configuration file path");
 	po::options_description desc = visible_desc;
