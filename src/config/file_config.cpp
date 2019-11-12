@@ -2,7 +2,6 @@
 #include <exceptions.h>
 
 #include <cassert>
-#include <charconv>
 #include <cstdint>
 #include <cstdio>
 #include <fstream>
@@ -64,11 +63,13 @@ FileConfig::FileConfig(const std::string &config_path) {
 				error(config_path, "invalid hex string \"" + hex + '\"');
 			std::string bytes;
 			bytes.reserve(hex.size() / 2);
-			for (auto s = hex.data(); s < hex.data() + hex.size(); s += 2) {
+			for (auto i = hex.begin(); i < hex.end(); i += 2) {
 				uint8_t byte;
-				auto [p, ec] = std::from_chars(s, s + 2, byte, 16);
-				if (ec != std::errc())
+				try {
+					byte = std::stoul(std::string(i, i + 2), nullptr, 16);
+				} catch (const std::exception &e) {
 					error(config_path, "invalid hex string \"" + hex + '\"');
+				}
 				bytes.push_back(byte);
 			}
 			return bytes;
