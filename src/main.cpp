@@ -23,8 +23,9 @@ int main(int argc, char **argv) {
 		("stdin,i", po::value<std::string>(), "redirected standard input")
 		("stdout,o", po::value<std::string>(), "redirected standard output")
 		("stderr,e", po::value<std::string>(), "redirected standard error")
-		("append-stdout", po::bool_switch(), "append to standard output")
-		("append-stderr", po::bool_switch(), "append to standard error")
+		("append-stdout,O", po::bool_switch(), "append to standard output")
+		("append-stderr,E", po::bool_switch(), "append to standard error")
+		("no-signature,n", po::bool_switch(), "do not verify configuration file signature")
 		("config,c", po::value<std::string>()->default_value(kDefaultConfig),
 					 "configuration file path");
 	po::options_description desc = visible_desc;
