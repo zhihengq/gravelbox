@@ -1,9 +1,5 @@
 #include <exceptions.h>
-#include <trace/tracer.h>
-#include <parser/parser.h>
-#include <config/file_config.h>
-#include <logger/logger.h>
-#include <ui/pinentry_ui.h>
+#include <modules.h>
 
 #include <boost/program_options.hpp>
 
@@ -11,8 +7,6 @@
 #include <string>
 #include <system_error>
 #include <vector>
-
-constexpr char kConfigPath[] = "gravelbox_config.json";
 
 int main(int argc, char **argv) {
 	namespace po = boost::program_options;
@@ -60,14 +54,7 @@ int main(int argc, char **argv) {
 	}
 
 	try {
-		auto config = std::make_unique<GravelBox::FileConfig>(kConfigPath);
-		auto parser = std::make_unique<GravelBox::Parser>(config->syscalldef());
-		auto ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
-		auto logger = std::make_unique<GravelBox::Logger>();
-		GravelBox::Tracer tracer(std::move(parser), std::move(config),
-								 std::move(ui), std::move(logger));
-		// TODO(qzh): pass stdin/stdout/stderr to tracer
-		return tracer.run(vm.at("args").as<std::vector<std::string>>());
+		return GravelBox::run(vm);
 	} catch (const std::system_error &se) {
 		std::cerr << "System error " << se.code().value() << ": " << se.what()
 				  << std::endl;
