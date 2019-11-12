@@ -68,8 +68,7 @@ int run_with_callbacks(
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0)
 	options |= PTRACE_O_EXITKILL;  // kill target if GravelBox is killed
 #else
-	// TODO(qzh): find a better solution
-#warning Linux kernel version < 3.11, PTRACE_I_KILLEXIT is disabled
+#warning Linux kernel version < 3.11, PTRACE_O_KILLEXIT is disabled
 #endif
 	check(::ptrace(PTRACE_SETOPTIONS, child, nullptr, options));
 	check(::ptrace(PTRACE_SYSCALL, child, nullptr, 0));
