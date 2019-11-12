@@ -19,8 +19,12 @@ GravelBox would also have various configurations that can be set pre-run to allo
 
 ## Dependencies
 
-- Boost Program Options
+- boost
+  - `program_options`
+  - `iostreams`
 - JsonCpp
+- OpenSSL
+- GnuPG
 
 ## Building GravelBox
 
@@ -113,3 +117,35 @@ make doc
 ```
 
 You can find the binary under `bin` directory and the documentation under `doc` directory.
+
+## Running GravelBox
+
+Usage:
+
+```text
+gravelbox [options] [--] target [args...]
+```
+
+Supported options can be found in the help message.
+Example commands:
+
+```sh
+# Show help message
+gravelbox -h
+gravelbox --help
+
+# Run commands under GravelBox
+gravelbox echo hello world
+gravelbox /usr/bin/ping google.com
+
+# Run commands with options
+gravelbox -- echo -e "hello\nworld"
+
+# I/O redirections
+gravelbox --stdout test.txt echo hello world
+gravelbox --stdout test.txt --append-stdout cat
+gravelbox --stdin test.txt cat
+
+# specify alternative config file location
+gravelbox --config path_to_config.json echo hello world
+```
