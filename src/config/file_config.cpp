@@ -133,7 +133,7 @@ FileConfig::Action FileConfig::get_action(const std::string &syscall) const
 bool FileConfig::verify_hmac(const std::string &data,
 							 const std::string &mac) const noexcept {
 	char md[kHashSize];
-	auto r = HMAC(EVP_sha3_512(), key_.data(), key_.size(),
+	auto r = HMAC(EVP_sha512(), key_.data(), key_.size(),
 				  reinterpret_cast<const uint8_t *>(data.data()), data.size(),
 				  reinterpret_cast<uint8_t *>(md), nullptr);
 	if (r == nullptr) {

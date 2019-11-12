@@ -5,7 +5,7 @@ GravelBox works by suspending the target program when it attempts to access syst
 GravelBox would then give the user an option to allow or deny this access.
 GravelBox would also have pre-set configurations that can allow or deny any combination of the permissions automatically.
 
-The configuration file should be signed by a key using HMAC-SHA-3-512 before GravelBox starts.
+The configuration file should be signed by a key using HMAC-SHA-512 before GravelBox starts.
 When GravelBox starts, it will ask the user for this signing key to verify the integrity and authenticity of the configuration file.
 If the configuration is not signed by the key provided by the user, it may suggest that the configuration file might have been tampered with.
 The user can also optionally set a password that needs to be entered every time when the user want to allow a system call.
@@ -161,7 +161,7 @@ There are two passwords for GravelBox:
   The hash of the user decision password is saved in the configuration file.
   The user can choose to not use a user decision password by making the hash empty.
 
-Both the configuration file signature and the password hash are generated using HMAC-SHA-3-512.
+Both the configuration file signature and the password hash are generated using HMAC-SHA-512.
 The signature file is a binary file containing exactly the signature (64 bytes).
 The password hash in the configuration file is hex encoded and should be 128 characters long.
 
