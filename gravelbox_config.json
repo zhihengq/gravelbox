@@ -1,5 +1,6 @@
 {
-	"password": "77e8ad11c6fc4470e7d768b5be68b4dc3163dd11a885b921ba1ae12903c4e7a56f6ed61dc6b93e93ca875ac1da9f12c595d0cfabd39a76c1acd734d555a830f3",
+	"signature": "gravelbox_config.sig",
+	"password": "5fc0801a86a09e77cab7d37353d15b805692477a2b7972a290894c0b927c5d8d5ffd67cc81ec1c691878788a9ee6aa86f04fe0c176455ff1e9a314dab28bd751",
 	"syscall-definition": "syscalldef.json",
 	"pinentry": "pinentry",
 	"max-string-length": 128,
