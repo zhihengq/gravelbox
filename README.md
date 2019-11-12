@@ -148,6 +148,9 @@ The settings include:
 - `default-action`:
     An action to take if no action group matches a system call.
 
+In the repository, there is a example configuration file.
+The configuration file signing key is "key" and the user decision password is "password".
+
 ## Configuration File Signing Key and User Decision Password
 
 There are two passwords for GravelBox:
