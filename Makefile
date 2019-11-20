@@ -63,7 +63,7 @@ $(BINDIR)/test_cli_ui: $(patsubst %,$(OBJDIR)/%.o,$(TEST_CLI_UI_OBJS))
 	$(ENSUREDIR) $(dir $@)
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-$(BINDIR)/print: $(OBJDIR)/c/targets/print.o
+$(BINDIR)/print: $(OBJDIR)/targets/print.o
 	$(ENSUREDIR) $(dir $@)
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -71,13 +71,21 @@ $(BINDIR)/multi-threaded: $(OBJDIR)/targets/multi-threaded.o
 	$(ENSUREDIR) $(dir $@)
 	$(CXX) $(LDFLAGS) $^ -o $@ -lpthread
 
+$(BINDIR)/int80: $(OBJDIR)/targets/int80.o
+	$(ENSUREDIR) $(dir $@)
+	$(CC) -no-pie $^ -o $@
+
 
 # Generic build rules for object files
 
-$(OBJDIR)/c/%.o: $(SRCDIR)/%.c $(HEADERS)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADERS)
 	$(ENSUREDIR) $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS)
 	$(ENSUREDIR) $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.S
+	$(ENSUREDIR) $(dir $@)
+	$(CC) -c $< -o $@
