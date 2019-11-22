@@ -54,17 +54,14 @@ Parser::Parser(const std::string &def) : str_(target_) {
 	}
 }
 
-std::string Parser::operator()(const user_regs_struct &regs) const noexcept {
-	const std::array<uint64_t, 6> args = {
-		regs.rdi, regs.rsi, regs.rdx, regs.r10, regs.r8, regs.r9,
-	};
+std::string Parser::operator()(const Utils::SyscallArgs &args) const noexcept {
 	std::ostringstream oss;
-	if (syscall_map_.count(regs.orig_rax) == 0) {
-		oss << "syscall(" << std::dec << regs.orig_rax << ", " << std::hex;
+	if (syscall_map_.count(args.number) == 0) {
+		oss << "syscall(" << std::dec << args.number << ", " << std::hex;
 		for (size_t i = 0; i < 6; i++)
-			oss << "0x" << args[i] << (i < 5 ? ", " : ")");
+			oss << "0x" << args.args[i] << (i < 5 ? ", " : ")");
 	} else {
-		syscall_map_.at(regs.orig_rax).write(oss, args);
+		syscall_map_.at(args.number).write(oss, args.args);
 	}
 	return oss.str();
 }

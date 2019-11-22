@@ -2,8 +2,7 @@
 #define TRACER_H_
 
 #include <type_traits.h>
-
-#include <sys/user.h>
+#include <utils.h>
 
 #include <cassert>
 #include <functional>
@@ -29,7 +28,7 @@ int run_with_callbacks(
 	const std::string &std_out, bool append_stdout,
 	const std::string &std_err, bool append_stderr,
 	const std::function<void(pid_t)> &pid_callback,
-	const std::function<bool(user_regs_struct)> &syscall_callback);
+	const std::function<bool(const Utils::SyscallArgs &)> &syscall_callback);
 
 }  // namespace TracerDetails
 
@@ -71,8 +70,8 @@ class Tracer {
 			args, std_in, std_out, append_stdout, std_err, append_stderr,
 			[&parser = *parser_](pid_t child) { parser.setpid(child); },
 			[&parser = *parser_, &config = *config_, &ui = *ui_,
-			 &logger = *logger_](const auto &regs) -> bool {
-				auto syscall_str = parser(regs);
+			 &logger = *logger_](const Utils::SyscallArgs &args) -> bool {
+				auto syscall_str = parser(args);
 				logger.write(syscall_str);
 				switch (config.get_action(syscall_str)) {
 				case Config::Action::ALLOW:

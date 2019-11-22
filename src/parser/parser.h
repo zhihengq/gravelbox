@@ -4,8 +4,8 @@
 #include "argtypes.h"
 #include "syscalldef.h"
 #include <type_traits.h>
+#include <utils.h>
 
-#include <sys/user.h>
 #include <sys/types.h>
 
 #include <functional>
@@ -30,10 +30,10 @@ class Parser {
 	/**
 	 * Parse syscall registers to human readable strings.
 	 *
-	 * @param regs user registers at syscall entry.
+	 * @param args user registers at syscall entry.
 	 * @return a string representation of the syscall with arguments.
 	 */
-	std::string operator()(const user_regs_struct &regs) const noexcept;
+	std::string operator()(const Utils::SyscallArgs &args) const noexcept;
 
 	/**
 	 * Set the pid of the target.

@@ -4,7 +4,8 @@
 // We use type traits to avoid C++20 concepts.
 // We can switch to concepts once C++20 is out.
 
-#include <sys/user.h>
+#include <utils.h>
+
 #include <sys/types.h>
 
 #include <string>
@@ -22,7 +23,7 @@ struct IsParser<
 	std::void_t<
 		std::enable_if_t<
 			std::is_same<decltype(std::declval<Parser>()(
-							 std::declval<const user_regs_struct>())),
+							 std::declval<const Utils::SyscallArgs>())),
 						 std::string>::value>,
 		std::enable_if_t<std::is_same<decltype(std::declval<Parser>().setpid(
 										  std::declval<const pid_t>())),

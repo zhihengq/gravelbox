@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 
+#include <array>
 #include <cassert>
 #include <cerrno>
 #include <functional>
@@ -47,6 +48,14 @@ inline T check(T retval) {
 		throw_system_error();
 	return retval;
 }
+
+/**
+ * System call registers.
+ */
+struct SyscallArgs {
+	uint64_t number;
+	std::array<uint64_t, 6> args;
+};
 
 /**
  * Spawn a child process.
