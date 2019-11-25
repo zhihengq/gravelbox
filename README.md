@@ -145,7 +145,7 @@ The settings include:
     The pinentry UI program to use.
 - `max-string-length`:
     The maximum number of characters to display when displaying a string parameter.
-  - Note: The string length should be less than 1 memory page size for GravelBox to work correctly.
+  - Note: The `max-string-length` should be less than 1 memory page size for GravelBox to work correctly. If it's set to values greater than 1 page, GravelBox won't run properly.
 - `action-group`:
     A list of action groups, each containing a list of regular expressions and an action if one of the regular expressions matches the system call.
     An action can be "allow", "deny", or "ask".
