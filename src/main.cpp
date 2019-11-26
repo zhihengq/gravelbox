@@ -3,7 +3,6 @@
 
 #include <boost/program_options.hpp>
 
-#include <regex>
 #include <iostream>
 #include <string>
 #include <system_error>
