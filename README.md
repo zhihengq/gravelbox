@@ -24,13 +24,17 @@ The user can also optionally set a password that needs to be entered every time 
 - `targets`: example targets to be traced
 
 ## Dependencies
-
+Notes: The user is responsible for making sure to download the safe version of JsonCpp. If the user wants to replace our dependency files with their own ones, the user is responsible for using the secure verison.
 - boost
   - `program_options`
   - `iostreams`
+  - Note: boost versions previous to 1.5.2 are insecure. Please check the version on the user's OS to make sure it's secure.
 - JsonCpp
+  - Note: JsonCpp versions previous to 1.9.2 are insecure. Please use the most recent version.
 - OpenSSL
+  - Note: OpenSSL verison 1.0.1g is insecure. Please use the most recent version.
 - GnuPG
+  - Note: GnuPG versions 1.4.8 and 2.0.8 are insecure. Please avoid these two versions.
 
 ## Building GravelBox
 
@@ -141,6 +145,7 @@ The settings include:
     The pinentry UI program to use.
 - `max-string-length`:
     The maximum number of characters to display when displaying a string parameter.
+  - Note: The `max-string-length` should be less than 1 memory page size for GravelBox to work correctly. If it's set to values greater than 1 page, GravelBox won't run properly.
 - `action-group`:
     A list of action groups, each containing a list of regular expressions and an action if one of the regular expressions matches the system call.
     An action can be "allow", "deny", or "ask".
