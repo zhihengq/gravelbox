@@ -96,8 +96,11 @@ FileConfig::FileConfig(const std::string &config_path) {
 				patterns.emplace_back(p.asString(), kRegexFlags);
 			action_groups_.emplace_back(action, std::move(patterns));
 		}
-	} catch (const std::regex_error &re) { error(config_path, std::string("Regex error: ") + re.what()); }
-	catch (const Json::Exception &je) { error(config_path, je.what()); }
+	} catch (const std::regex_error &re) {
+		error(config_path, std::string("Regex error: ") + re.what());
+	} catch (const Json::Exception &je) {
+		error(config_path, je.what());
+	}
 }
 
 bool FileConfig::verify_signature(std::string &&key) {
