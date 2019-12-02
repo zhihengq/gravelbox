@@ -24,7 +24,9 @@ int run(const boost::program_options::variables_map &vm) {
 		if (!key)
 			return EXIT_FAILURE;
 		while (!config->verify_signature(std::move(key.password))) {
-			key = valid_ui.ask_password(message, prompt, "Incorrect password");
+			key = valid_ui.ask_password(
+				message, prompt,
+				"Incorrect key, or the configuration has been changed.");
 			if (!key)
 				return EXIT_FAILURE;
 		}
