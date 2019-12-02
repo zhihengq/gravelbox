@@ -47,17 +47,19 @@ Parser::Parser(const std::string &def) : str_(target_) {
 										  "unknown type \"" + param_str + '\"');
 				}
 			}
-			syscall_map_.emplace(number, std::move(syscalldef));
+			auto [it, insert]
+				= syscall_map_.emplace(number, std::move(syscalldef));
+			sanitize(insert,
+					 "duplicate syscall number " + std::to_string(number));
 		}
-	} catch (const Json::Exception &je) {
-		error(def, je.what());
-	}
+	} catch (const Json::Exception &je) { error(def, je.what()); }
 }
 
 std::string Parser::operator()(const Utils::SyscallArgs &args) const noexcept {
 	std::ostringstream oss;
-	if (syscall_map_.count(args.number) == 0) {
-		oss << "syscall(" << std::dec << args.number << ", " << std::hex;
+	if (args.int80 || syscall_map_.count(args.number) == 0) {
+		oss << (args.int80 ? "syscall32(" : "syscall(") << std::dec
+			<< args.number << ", " << std::hex;
 		for (size_t i = 0; i < 6; i++)
 			oss << "0x" << args.args[i] << (i < 5 ? ", " : ")");
 	} else {

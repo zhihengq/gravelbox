@@ -71,8 +71,6 @@ class Tracer {
 			[&parser = *parser_](pid_t child) { parser.setpid(child); },
 			[&parser = *parser_, &config = *config_, &ui = *ui_,
 			 &logger = *logger_](const Utils::SyscallArgs &args) -> bool {
-				if (args.int80)
-					return false;
 				auto syscall_str = parser(args);
 				logger.write(syscall_str);
 				switch (config.get_action(syscall_str)) {
