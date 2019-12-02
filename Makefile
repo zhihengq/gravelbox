@@ -25,12 +25,13 @@ TEST_CLI_UI_OBJS ?= ui/test ui/cli_ui ui/pwd
 HEADERS := $(wildcard src/*.h) $(wildcard src/**/*.h)
 
 ifdef RELEASE
-CXXFLAGS += -DNDEBUG -O3
-CFLAGS += -DNDEBUG -O3
+CXXFLAGS += -DNDEBUG -O3 -flto
+CFLAGS += -DNDEBUG -O3 -flto
+LDFLAGS += -O3 -flto
 else
 CXXFLAGS += -g -O0 $(SANITIZERS)
 CFLAGS += -g -O0 $(SANITIZERS)
-LDFLAGS += $(SANITIZERS)
+LDFLAGS += -g -O0 $(SANITIZERS)
 endif
 
 all: build
