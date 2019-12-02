@@ -11,13 +11,13 @@ int main(int argc, char **argv) {
 	for (int i = 1; i < argc; i++) {
 		int fd;
 		if ((fd = open(argv[i], O_RDONLY)) < 0) {
-			perror("a");//argv[i]);
+			perror(argv[i]);
 			failure = true;
 			continue;
 		}
 		struct stat fdstat;
 		if (fstat(fd, &fdstat) < 0) {
-			perror("b");//argv[i]);
+			perror(argv[i]);
 			close(fd);
 			failure = true;
 			continue;
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 		off_t offset = 0;
 		while (offset < size) {
 			if (sendfile(STDOUT_FILENO, fd, &offset, size - offset) < 0) {
-				perror("c");//argv[i]);
+				perror(argv[i]);
 				failure = true;
 				break;
 			}
