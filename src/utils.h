@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 
+#include <array>
 #include <cassert>
 #include <cerrno>
 #include <functional>
@@ -17,14 +18,6 @@ namespace GravelBox {
  * Common util functions.
  */
 namespace Utils {
-
-/**
- * Use a variable to suppress unused variable warning.
- *
- * @tparam T any type.
- */
-template <typename T>
-inline void use(T) {}
 
 /**
  * Throw an `system_error` with the current `errno`.
@@ -47,6 +40,15 @@ inline T check(T retval) {
 		throw_system_error();
 	return retval;
 }
+
+/**
+ * System call registers.
+ */
+struct SyscallArgs {
+	uint64_t number;
+	std::array<uint64_t, 6> args;
+	bool int80;
+};
 
 /**
  * Spawn a child process.

@@ -7,8 +7,15 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
-#include <sys/ptrace.h>
 #include <sys/user.h>
+
+// custom ptrace declearation to use kernel 5.3 ptrace definition.
+// switch back to glibc sys/ptrace.h when glibc is updated.
+#include <linux/ptrace.h>
+#include <linux/audit.h>
+extern "C" {
+	extern long int ptrace(int __request, ...) noexcept;
+}
 
 #include <cassert>
 #include <functional>
@@ -27,7 +34,7 @@ int run_with_callbacks(
 	const std::string &std_out, bool append_stdout,
 	const std::string &std_err, bool append_stderr,
 	const std::function<void(pid_t)> &pid_callback,
-	const std::function<bool(user_regs_struct)> &syscall_callback) {
+	const std::function<bool(const Utils::SyscallArgs &)> &syscall_callback) {
 	// spawn child
 	pid_t child = Utils::spawn(args, [&]() {
 		check(::ptrace(PTRACE_TRACEME, 0, nullptr, nullptr));
@@ -98,13 +105,31 @@ int run_with_callbacks(
 					switch (thread_status.at(child)) {
 					case ThreadStatus::USERSPACE: {
 						// syscall-enter-stop
-						user_regs_struct regs;
-						check(::ptrace(PTRACE_GETREGS, child, nullptr, &regs));
+						ptrace_syscall_info info;
+						check(::ptrace(PTRACE_GET_SYSCALL_INFO, child,
+									   sizeof(info), &info));
+						assert(info.op == PTRACE_SYSCALL_INFO_ENTRY);
+						assert(info.arch == AUDIT_ARCH_I386
+							   || info.arch == AUDIT_ARCH_X86_64);
 						pid_callback(child);
-						if (syscall_callback(regs)) {
+						Utils::SyscallArgs args
+							= {info.entry.nr,
+							   {
+								   info.entry.args[0],
+								   info.entry.args[1],
+								   info.entry.args[2],
+								   info.entry.args[3],
+								   info.entry.args[4],
+								   info.entry.args[5],
+							   },
+							   info.arch == AUDIT_ARCH_I386};
+						if (syscall_callback(args)) {
 							thread_status[child]
 								= ThreadStatus::KERNELSPACE_ALLOW;
 						} else {
+							user_regs_struct regs;
+							check(::ptrace(PTRACE_GETREGS, child, nullptr,
+										   &regs));
 							regs.orig_rax = -1;
 							check(::ptrace(PTRACE_SETREGS, child, nullptr,
 										   &regs));

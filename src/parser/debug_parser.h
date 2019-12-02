@@ -2,6 +2,7 @@
 #define DEBUG_PARSER_H_
 
 #include <type_traits.h>
+#include <utils.h>
 
 #include <sys/user.h>
 #include <sys/types.h>
@@ -23,18 +24,18 @@ class DebugParser {
 	 * @param regs user registers at syscall entry.
 	 * @return a string representation of the syscall with arguments.
 	 */
-	std::string operator()(const user_regs_struct &regs) const noexcept {
+	std::string operator()(const Utils::SyscallArgs &args) const noexcept {
 		std::ostringstream oss;
 		oss << "syscall("
 			<< std::dec
-			<< regs.orig_rax << ", "
+			<< args.number << ", "
 			<< std::hex
-			<< "0x" << regs.rdi << ", "
-			<< "0x" << regs.rsi << ", "
-			<< "0x" << regs.rdx << ", "
-			<< "0x" << regs.r10 << ", "
-			<< "0x" << regs.r8 << ", "
-			<< "0x" << regs.r9 << ')';
+			<< "0x" << args.args[0] << ", "
+			<< "0x" << args.args[1] << ", "
+			<< "0x" << args.args[2] << ", "
+			<< "0x" << args.args[3] << ", "
+			<< "0x" << args.args[4] << ", "
+			<< "0x" << args.args[5] << ')';
 		return oss.str();
 	}
 
