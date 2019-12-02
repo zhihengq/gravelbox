@@ -39,7 +39,7 @@ all: build
 BUILD_LIST := gravelbox
 build: $(patsubst %,$(BINDIR)/%,$(BUILD_LIST))
 
-TARGET_LIST := print multi-threaded
+TARGET_LIST := print print32 multi-threaded multi-threaded32 int80
 targets: $(patsubst %,$(BINDIR)/%,$(TARGET_LIST))
 
 test: $(BINDIR)/test_cli_ui
@@ -68,9 +68,17 @@ $(BINDIR)/print: $(OBJDIR)/targets/print.o
 	$(ENSUREDIR) $(dir $@)
 	$(CC) $(LDFLAGS) $^ -o $@
 
+$(BINDIR)/print32: $(OBJDIR)/m32/targets/print.o
+	$(ENSUREDIR) $(dir $@)
+	$(CC) $(LDFLAGS) -m32 $^ -o $@
+
 $(BINDIR)/multi-threaded: $(OBJDIR)/targets/multi-threaded.o
 	$(ENSUREDIR) $(dir $@)
 	$(CXX) $(LDFLAGS) $^ -o $@ -lpthread
+
+$(BINDIR)/multi-threaded32: $(OBJDIR)/m32/targets/multi-threaded.o
+	$(ENSUREDIR) $(dir $@)
+	$(CXX) $(LDFLAGS) -m32 $^ -o $@ -lpthread
 
 $(BINDIR)/int80: $(OBJDIR)/targets/int80.o
 	$(ENSUREDIR) $(dir $@)
@@ -90,3 +98,11 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS)
 $(OBJDIR)/%.o: $(SRCDIR)/%.S
 	$(ENSUREDIR) $(dir $@)
 	$(CC) -c $< -o $@
+
+$(OBJDIR)/m32/%.o: $(SRCDIR)/%.c $(HEADERS)
+	$(ENSUREDIR) $(dir $@)
+	$(CC) $(CFLAGS) -m32 -c $< -o $@
+
+$(OBJDIR)/m32/%.o: $(SRCDIR)/%.cpp $(HEADERS)
+	$(ENSUREDIR) $(dir $@)
+	$(CXX) $(CXXFLAGS) -m32 -c $< -o $@
