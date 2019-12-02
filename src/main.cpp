@@ -25,9 +25,12 @@ int main(int argc, char **argv) {
 		("stderr,e", po::value<std::string>(), "redirected standard error")
 		("append-stdout,O", po::bool_switch(), "append to standard output")
 		("append-stderr,E", po::bool_switch(), "append to standard error")
-		("no-signature,n", po::bool_switch(), "do not verify configuration file signature")
+		("no-signature,n", po::bool_switch(),
+				"do not verify configuration file signature")
 		("config,c", po::value<std::string>()->default_value(kDefaultConfig),
-					 "configuration file path");
+				"configuration file path")
+		("pinentry,p", po::value<std::string>(),
+				"pinentry program, overriding the configuration");
 	po::options_description desc = visible_desc;
 	desc.add_options()("args", po::value<std::vector<std::string>>());
 	po::positional_options_description pod;

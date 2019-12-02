@@ -5,6 +5,7 @@
 #include <logger/logger.h>
 #include <ui/pinentry_ui.h>
 
+#include <memory>
 #include <vector>
 
 #include <boost/program_options.hpp>
@@ -14,21 +15,31 @@ namespace GravelBox {
 int run(const boost::program_options::variables_map &vm) {
 	auto config = std::make_unique<GravelBox::FileConfig>(
 		vm.at("config").as<std::string>());
-	auto ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
+
+	std::unique_ptr<GravelBox::PinentryUI> ui;
+	if (vm.count("pinentry") > 0)
+		ui = std::make_unique<GravelBox::PinentryUI>(
+			vm.at("pinentry").as<std::string>());
 	if (vm.at("no-signature").as<bool>()) {
 		config->dismiss_signature();
 	} else {
 		constexpr auto message = "Enter the configuration file signing key.";
 		constexpr auto prompt = "key: ";
+		if (ui == nullptr)
+			ui = std::make_unique<GravelBox::PinentryUI>("pinentry");
 		PinentryUI::Password key = ui->ask_password(message, prompt, "");
 		if (!key)
 			return EXIT_FAILURE;
 		while (!config->verify_signature(std::move(key.password))) {
-			key = ui->ask_password(message, prompt, "Incorrect password");
+			key = ui->ask_password(
+				message, prompt,
+				"Incorrect key, or the configuration has been changed.");
 			if (!key)
 				return EXIT_FAILURE;
 		}
 	}
+	if (vm.count("pinentry") == 0)
+		auto ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
 	auto parser = std::make_unique<GravelBox::Parser>(config->syscalldef());
 	auto logger = std::make_unique<GravelBox::Logger>();
 	GravelBox::Tracer tracer(std::move(parser), std::move(config),
