@@ -51,8 +51,18 @@ void StrType::write(std::ostream &os, uint64_t value) const {
 		remote[1].iov_len = kMaxStrLen - remote[0].iov_len;
 		num_remotes = 2;
 	}
-	size_t bytes = Utils::check(
-		::process_vm_readv(target_, &local, 1, remote, num_remotes, 0));
+	size_t bytes;
+	try {
+		bytes = Utils::check(
+			::process_vm_readv(target_, &local, 1, remote, num_remotes, 0));
+	} catch (const std::system_error &se) {
+		if (se.code().value() == EFAULT) {
+			os << "<fault>";
+			return;
+		} else {
+			throw se;
+		}
+	}
 	os << '\"';
 	size_t i;
 	for (i = 0; i < bytes; i++) {
