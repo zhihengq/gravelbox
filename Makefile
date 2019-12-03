@@ -39,7 +39,7 @@ all: build
 BUILD_LIST := gravelbox
 build: $(patsubst %,$(BINDIR)/%,$(BUILD_LIST))
 
-TARGET_LIST := print print32 multi-threaded multi-threaded32 int80
+TARGET_LIST := print print32 multi-threaded multi-threaded32 int80 segfault segfault32
 targets: $(patsubst %,$(BINDIR)/%,$(TARGET_LIST))
 
 test: $(BINDIR)/test_cli_ui
@@ -83,6 +83,14 @@ $(BINDIR)/multi-threaded32: $(OBJDIR)/m32/targets/multi-threaded.o
 $(BINDIR)/int80: $(OBJDIR)/targets/int80.o
 	$(ENSUREDIR) $(dir $@)
 	$(CC) -no-pie $^ -o $@
+
+$(BINDIR)/segfault: $(SRCDIR)/targets/segfault.c
+	$(ENSUREDIR) $(dir $@)
+	$(CC) -std=c11 -O0 $^ -o $@
+
+$(BINDIR)/segfault32: $(SRCDIR)/targets/segfault.c
+	$(ENSUREDIR) $(dir $@)
+	$(CC) -std=c11 -O0 -m32 $^ -o $@
 
 
 # Generic build rules for object files
