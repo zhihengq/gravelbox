@@ -20,6 +20,7 @@ LDFLAGS += $(LDEXTRA)
 endif
 
 GRAVELBOX_OBJS ?= main modules trace/tracer parser/parser parser/argtypes config/file_config ui/pinentry_ui ui/pinentry_conn
+GRAVELBOX_SIGN_OBJS ?= sign ui/pinentry_ui ui/pinentry_conn
 TEST_CLI_UI_OBJS ?= ui/test ui/cli_ui ui/pwd
 
 HEADERS := $(wildcard src/*.h) $(wildcard src/**/*.h)
@@ -36,7 +37,7 @@ endif
 
 all: build
 
-BUILD_LIST := gravelbox
+BUILD_LIST := gravelbox gravelbox_sign
 build: $(patsubst %,$(BINDIR)/%,$(BUILD_LIST))
 
 TARGET_LIST := print print32 multi-threaded multi-threaded32 int80 segfault segfault32
@@ -59,6 +60,10 @@ clean:
 $(BINDIR)/gravelbox: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_OBJS))
 	$(ENSUREDIR) $(dir $@)
 	$(CXX) $(LDFLAGS) $^ -o $@ -lboost_program_options -lboost_iostreams -ljsoncpp -lcrypto
+
+$(BINDIR)/gravelbox_sign: $(patsubst %,$(OBJDIR)/%.o,$(GRAVELBOX_SIGN_OBJS))
+	$(ENSUREDIR) $(dir $@)
+	$(CXX) $(LDFLAGS) $^ -o $@ -lboost_iostreams -lcrypto
 
 $(BINDIR)/test_cli_ui: $(patsubst %,$(OBJDIR)/%.o,$(TEST_CLI_UI_OBJS))
 	$(ENSUREDIR) $(dir $@)
