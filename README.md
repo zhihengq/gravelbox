@@ -171,7 +171,7 @@ The signature file is a binary file containing exactly the signature (64 bytes).
 The password hash in the configuration file is hex encoded and should be 128 characters long.
 
 The user can pass `-n` or `--no-signature` flags to GravelBox to skip signature verification.
-However, GravelBox will then assume the configuration file is not protected by a key, which means the password is hashed by an empty key.
+If the signature verification is skipped, the user decision password will also be disabled.
 
 ## Running GravelBox
 

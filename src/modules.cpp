@@ -22,6 +22,7 @@ int run(const boost::program_options::variables_map &vm) {
 			vm.at("pinentry").as<std::string>());
 	if (vm.at("no-signature").as<bool>()) {
 		config->dismiss_signature();
+		config->remove_password();
 	} else {
 		constexpr auto message = "Enter the configuration file signing key.";
 		constexpr auto prompt = "key: ";

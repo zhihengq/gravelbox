@@ -73,6 +73,11 @@ class FileConfig {
 	void dismiss_signature() noexcept { config_.clear(); }
 
 	/**
+	 * Remove the password for user interactions, from the configuration.
+	 */
+	void remove_password() noexcept { password_hash_.clear(); }
+
+	/**
 	 * Check if the configuration contains a password for user interactions.
 	 *
 	 * @return true if there is a password. Password should be verified before
