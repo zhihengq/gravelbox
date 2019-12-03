@@ -39,7 +39,7 @@ int run(const boost::program_options::variables_map &vm) {
 		}
 	}
 	if (vm.count("pinentry") == 0)
-		auto ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
+		ui = std::make_unique<GravelBox::PinentryUI>(config->pinentry());
 	auto parser = std::make_unique<GravelBox::Parser>(config->syscalldef());
 	auto logger = std::make_unique<GravelBox::Logger>();
 	GravelBox::Tracer tracer(std::move(parser), std::move(config),
