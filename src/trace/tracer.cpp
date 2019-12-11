@@ -11,10 +11,13 @@
 
 // custom ptrace declearation to use kernel 5.3 ptrace definition.
 // switch back to glibc sys/ptrace.h when glibc is updated.
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 3, 0)
+#error GravelBox requires Linux kernel version >= 5.3
+#endif
 #include <linux/ptrace.h>
 #include <linux/audit.h>
 extern "C" {
-	extern long int ptrace(int __request, ...) noexcept;
+	extern int32_t ptrace(int __request, ...) noexcept;
 }
 
 #include <cassert>
